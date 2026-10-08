@@ -50,7 +50,7 @@ export function CustomizeCta() {
         </div>
         <div className="relative grid h-full min-h-80 grid-cols-2 gap-3 p-6 sm:p-10 lg:pl-0">
           <div className="relative overflow-hidden rounded-lg bg-background">
-            <Image src={IMG.showman} alt="Muñeco personalizado" fill sizes="300px" className="object-cover" />
+            <Image src={IMG.personalizado} alt="Muñeco personalizado" fill sizes="300px" className="object-cover" />
           </div>
           <div className="grid gap-3">
             <div className="relative overflow-hidden rounded-lg bg-background">

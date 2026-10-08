@@ -95,7 +95,7 @@ export function ProductForm({
     description: values.description,
     price: Number.isFinite(values.price) ? values.price : 0,
     compareAtPrice: values.compareAtPrice ?? null,
-    images: values.images?.length ? values.images : ["/products/peluches/Peluches2.jpeg"],
+    images: values.images?.length ? values.images : ["/products/peluches/peluche-michael-jackson-coleccion-01.jpeg"],
     categoryId: values.categoryId,
     brandId: values.brandId || null,
     productType: values.productType,

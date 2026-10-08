@@ -127,7 +127,7 @@ export const CUSTOMIZERS: Record<CustomizableType, CustomizerConfig> = {
     subtitle: "Vos, tu pareja o tu amigo, en versión muñeco",
     description:
       "Mandanos fotos de la persona y armamos un muñeco cosido a mano con su cara, ropa y accesorios.",
-    image: "/products/peluches/Peluches2.jpeg",
+    image: "/products/peluches/peluche-michael-jackson-coleccion-01.jpeg",
     basePrice: 32000,
     productionDays: "10 a 15 días hábiles",
     maxPhotos: 4,
@@ -184,7 +184,7 @@ export const CUSTOMIZERS: Record<CustomizableType, CustomizerConfig> = {
     title: "Llavero personalizado",
     subtitle: "Tu mascota, tu ídolo o tu cara",
     description: "Llavero de tela acolchado con la imagen que quieras, cosido a mano.",
-    image: "/products/peluches/Peluches3.jpeg",
+    image: "/products/llaveros/llavero-gustavo-cerati-traje-marron-01.jpeg",
     basePrice: 6500,
     productionDays: "5 a 7 días hábiles",
     maxPhotos: 2,

@@ -41,7 +41,7 @@ export const addresses: Address[] = [
 ]
 
 /** IDs de productos favoritos del usuario de prueba. */
-export const favoriteProductIds = ["prod-002", "prod-012", "prod-025"]
+export const favoriteProductIds = ["prod-011", "prod-025", "prod-038"]
 
 const shipping = {
   recipient: "Morena Gómez",
@@ -64,25 +64,25 @@ export const orders: Order[] = [
     items: [
       {
         id: "oi-1",
-        productId: "prod-003",
+        productId: "prod-019",
         name: "Muñeco personalizado de tu persona favorita",
-        image: IMG.showman,
+        image: IMG.personalizado,
         size: null,
         color: null,
         quantity: 1,
         unitPrice: 32000,
         customization: {
           type: "muneco",
-          photos: [IMG.showman],
+          photos: [IMG.personalizado],
           options: { tamano: "35 cm", ropa: "Como en la foto", accesorio: "Ninguno", packaging: "Caja de regalo" },
           notes: "Es para el cumple de mi papá, que tenga el micrófono.",
         },
       },
       {
         id: "oi-2",
-        productId: "prod-008",
-        name: "Llavero piloto F1",
-        image: IMG.f1Duo,
+        productId: "prod-020",
+        name: "Llavero Franco Colapinto",
+        image: IMG.colapintoKeychain,
         size: null,
         color: null,
         quantity: 2,
@@ -114,7 +114,7 @@ export const orders: Order[] = [
     items: [
       {
         id: "oi-3",
-        productId: "prod-012",
+        productId: "prod-025",
         name: "Remera Diego brindis",
         image: IMG.diegoBrindis,
         size: "M",
@@ -150,7 +150,7 @@ export const orders: Order[] = [
     items: [
       {
         id: "oi-4",
-        productId: "prod-025",
+        productId: "prod-038",
         name: "Almohadón de tu mascota",
         image: IMG.michi,
         size: null,
@@ -192,11 +192,11 @@ export const customOrders: CustomOrder[] = [
     customerName: "Morena Gómez",
     type: "muneco",
     title: "Muñeco papá con micrófono",
-    photos: [IMG.showman],
+    photos: [IMG.personalizado],
     options: { tamano: "35 cm", ropa: "Como en la foto", accesorio: "Ninguno", packaging: "Caja de regalo" },
     notes: "Es para el cumple de mi papá, que tenga el micrófono.",
     status: "APROBACION",
-    designPreview: IMG.showman,
+    designPreview: IMG.personalizado,
     dueDate: "2026-10-08",
     createdAt: "2026-09-26T15:20:00-03:00",
   },
@@ -220,7 +220,7 @@ export const customOrders: CustomOrder[] = [
     customerName: "Tomás Ruiz",
     type: "muneco",
     title: "Muñeco pareja aniversario",
-    photos: [IMG.potro],
+    photos: [IMG.personalizado],
     options: { tamano: "25 cm", ropa: "Remera y jean", accesorio: "Mate", packaging: "Caja de regalo" },
     notes: "Son dos muñecos, uno de cada uno.",
     status: "DISENO",
@@ -262,7 +262,7 @@ export const customOrders: CustomOrder[] = [
     customerName: "Sofía Medina",
     type: "muneco",
     title: "Muñeca abuela Nelly",
-    photos: [IMG.showman],
+    photos: [IMG.personalizado],
     options: { tamano: "45 cm", ropa: "Vestido", accesorio: "Anteojos", packaging: "Bolsa kraft" },
     notes: "Con su delantal de cocina si se puede.",
     status: "RECIBIDO",

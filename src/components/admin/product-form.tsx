@@ -115,7 +115,7 @@ export function ProductForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6 xl:grid-cols-[1fr_300px]" noValidate>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_300px]" noValidate>
         <div className="space-y-6">
           <section className="space-y-4 rounded-lg border p-5">
             <h2 className="font-semibold">Información</h2>
@@ -145,7 +145,7 @@ export function ProductForm({
                 </FormItem>
               )}
             />
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <FormField
                 control={form.control}
                 name="productType"
@@ -239,7 +239,7 @@ export function ProductForm({
 
           <section className="space-y-4 rounded-lg border p-5">
             <h2 className="font-semibold">Precio</h2>
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="price"

@@ -14,7 +14,7 @@ const STEPS = [
 export function CustomizeCta({ hideCta }: { hideCta?: boolean }) {
   return (
     <section className="overflow-hidden rounded-xl border bg-secondary">
-      <div className="grid items-center gap-8 lg:grid-cols-2">
+      <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2">
         <div className="space-y-6 p-6 sm:p-10">
           <div>
             <p className="text-xs font-medium tracking-[0.2em] text-primary uppercase">Personalizados</p>

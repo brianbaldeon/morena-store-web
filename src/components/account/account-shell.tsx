@@ -47,7 +47,7 @@ export function AccountShell({ children }: { children: React.ReactNode }) {
 
   if (!ready || !user) {
     return (
-      <div className="grid gap-8 lg:grid-cols-[240px_1fr]">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_1fr]">
         <Skeleton className="hidden h-48 lg:block" />
         <Skeleton className="h-96" />
       </div>
@@ -67,7 +67,7 @@ export function AccountShell({ children }: { children: React.ReactNode }) {
   )
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[240px_1fr]">
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_1fr]">
       <aside className="hidden h-fit space-y-4 rounded-lg border p-4 lg:block">
         {header}
         <AccountNav />

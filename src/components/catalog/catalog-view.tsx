@@ -131,7 +131,7 @@ export function CatalogView({
         {isPending && <Loader2 className="size-4 animate-spin text-muted-foreground" aria-label="Actualizando" />}
       </h2>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[260px_1fr]">
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[260px_1fr]">
         <aside className="hidden lg:block" aria-label="Filtros">
           {panel}
         </aside>

@@ -12,9 +12,9 @@ export function ProductGallery({ product }: { product: Product }) {
   const images = product.images
 
   return (
-    <div className="flex flex-col-reverse gap-3 sm:flex-row">
+    <div className="flex min-w-0 flex-col-reverse gap-3 sm:flex-row">
       {images.length > 1 && (
-        <div className="flex gap-3 sm:flex-col" role="tablist" aria-label="Fotos del producto">
+        <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-col sm:overflow-visible sm:px-0 sm:pb-0" role="tablist" aria-label="Fotos del producto">
           {images.map((src, i) => (
             <button
               key={src + i}
@@ -33,7 +33,7 @@ export function ProductGallery({ product }: { product: Product }) {
           ))}
         </div>
       )}
-      <div className="relative aspect-3/4 flex-1 overflow-hidden rounded-lg bg-muted">
+      <div className="relative aspect-3/4 w-full overflow-hidden rounded-lg bg-muted sm:w-auto sm:flex-1">
         <Image
           src={images[active]}
           alt={product.name}

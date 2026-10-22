@@ -21,7 +21,7 @@ export default async function AdminDashboardPage() {
   return (
     <>
       <AdminPageHeader title="Dashboard" description="Cómo viene la tienda este mes." />
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Ventas del mes" value={formatPrice(stats.revenue)} icon={DollarSign} change={stats.revenueChange} />
         <StatCard label="Pedidos" value={formatNumber(stats.orders)} icon={ShoppingBag} change={stats.ordersChange} />
         <StatCard label="Clientes nuevos" value={formatNumber(stats.customers)} icon={Users} change={stats.customersChange} />
@@ -33,7 +33,7 @@ export default async function AdminDashboardPage() {
         />
       </div>
 
-      <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_360px]">
+      <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[1fr_360px]">
         <section className="rounded-lg border p-5">
           <h2 className="font-semibold">Ventas de los últimos 6 meses</h2>
           <p className="mb-4 text-xs text-muted-foreground">En pesos, pagos aprobados por Mercado Pago</p>
@@ -62,7 +62,7 @@ export default async function AdminDashboardPage() {
         </section>
       </div>
 
-      <div className="mt-6 grid gap-6 xl:grid-cols-2">
+      <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
         <section className="rounded-lg border p-5">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-semibold">Últimos pedidos</h2>

@@ -37,7 +37,7 @@ export default async function OrderDetailPage(props: PageProps<"/cuenta/pedidos/
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_300px]">
         <div className="space-y-6">
           <section className="rounded-lg border p-5">
             <h2 className="mb-2 font-semibold">Productos</h2>

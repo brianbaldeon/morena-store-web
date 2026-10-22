@@ -1,4 +1,4 @@
-Ñimport { expect, test } from "@playwright/test"
+import { expect, test } from "@playwright/test"
 
 /**
  * SMOKE-xx: las páginas clave cargan sin errores, con status 200 y su contenido mínimo visible.

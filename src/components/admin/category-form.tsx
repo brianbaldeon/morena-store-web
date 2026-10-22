@@ -41,7 +41,7 @@ export function CategoryForm({ category }: { category?: Category }) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="grid max-w-4xl gap-6 md:grid-cols-[1fr_220px]" noValidate>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 max-w-4xl gap-6 md:grid-cols-[1fr_220px]" noValidate>
         <div className="space-y-4 rounded-lg border p-5">
           <FormField
             control={form.control}
@@ -69,7 +69,7 @@ export function CategoryForm({ category }: { category?: Category }) {
               </FormItem>
             )}
           />
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormField
               control={form.control}
               name="productType"

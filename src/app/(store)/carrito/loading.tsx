@@ -5,7 +5,7 @@ export default function Loading() {
   return (
     <PageContainer className="py-10">
       <Skeleton className="mb-6 h-8 w-40" />
-      <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_380px]">
         <div className="space-y-4">
           {Array.from({ length: 3 }, (_, i) => (
             <Skeleton key={i} className="h-32 w-full" />

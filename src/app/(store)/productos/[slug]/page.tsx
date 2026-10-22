@@ -57,7 +57,7 @@ export default async function ProductPage(props: PageProps<"/productos/[slug]">)
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-12">
+      <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-12">
         <ProductGallery product={product} />
         <PurchasePanel product={product} />
       </div>

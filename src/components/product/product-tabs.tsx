@@ -31,7 +31,7 @@ export function ProductTabs({ product }: { product: ProductWithRelations }) {
           ))}
         </ul>
       </TabsContent>
-      <TabsContent value="envios" className="grid gap-3 pt-4 sm:grid-cols-3">
+      <TabsContent value="envios" className="grid grid-cols-1 gap-3 pt-4 sm:grid-cols-3">
         {[
           { icon: Truck, title: "Envíos a todo el país", text: "Gratis desde $60.000. Llega en 3 a 6 días hábiles." },
           { icon: Clock, title: "Personalizados", text: "Se producen en 5 a 15 días hábiles según el producto." },

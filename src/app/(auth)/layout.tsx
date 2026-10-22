@@ -5,7 +5,7 @@ import { IMG } from "@/data/mock-products"
 
 export default function AuthLayout({ children }: LayoutProps<"/">) {
   return (
-    <div className="grid min-h-svh flex-1 lg:grid-cols-2">
+    <div className="grid grid-cols-1 min-h-svh flex-1 lg:grid-cols-2">
       <div className="flex flex-col px-4 py-6 sm:px-8">
         <Logo />
         <div className="flex flex-1 items-center justify-center py-10">

@@ -8,7 +8,7 @@ const TESTIMONIALS = [
 
 export function Testimonials() {
   return (
-    <div className="grid gap-4 md:grid-cols-3">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
       {TESTIMONIALS.map((t) => (
         <figure key={t.name} className="rounded-lg border p-6">
           <div className="flex gap-0.5 text-primary" aria-label="5 de 5 estrellas">

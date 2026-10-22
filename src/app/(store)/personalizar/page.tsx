@@ -17,7 +17,7 @@ export default function CustomizePage() {
         <section id="tipos" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold tracking-tight">¿Qué querés personalizar?</h2>
           <p className="mt-1 mb-6 text-sm text-muted-foreground">Elegí el producto y seguí los pasos. Toma menos de 2 minutos.</p>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {Object.values(CUSTOMIZERS).map((config) => (
               <CustomizeTypeCard key={config.type} config={config} />
             ))}

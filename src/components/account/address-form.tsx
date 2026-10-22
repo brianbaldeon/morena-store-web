@@ -67,11 +67,11 @@ export function AddressForm({ address }: { address?: Address }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 rounded-lg border p-5" noValidate>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {text("label", "Nombre de la dirección (ej: Casa)")}
           {text("recipient", "Quién recibe", undefined, "name")}
         </div>
-        <div className="grid gap-4 sm:grid-cols-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-6">
           {text("street", "Calle", "sm:col-span-3", "address-line1")}
           {text("number", "Altura", "sm:col-span-1")}
           {text("apartment", "Piso / Depto", "sm:col-span-2")}

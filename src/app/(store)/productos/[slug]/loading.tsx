@@ -5,7 +5,7 @@ export default function Loading() {
   return (
     <PageContainer className="py-8">
       <Skeleton className="h-4 w-56" />
-      <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-12">
+      <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-12">
         <Skeleton className="aspect-square w-full" />
         <div className="space-y-4">
           <Skeleton className="h-4 w-24" />

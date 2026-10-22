@@ -26,7 +26,7 @@ export default async function AdminCustomOrderPage(props: PageProps<"/admin/pers
         backLabel="Personalizados"
         actions={<CustomStatusBadge status={order.status} />}
       />
-      <div className="grid gap-6 xl:grid-cols-[1fr_340px]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_340px]">
         <div className="space-y-6">
           <section className="rounded-lg border p-5">
             <h2 className="mb-3 font-semibold">Fotos del cliente</h2>
@@ -40,7 +40,7 @@ export default async function AdminCustomOrderPage(props: PageProps<"/admin/pers
           </section>
           <section className="rounded-lg border p-5">
             <h2 className="mb-3 font-semibold">Opciones elegidas</h2>
-            <dl className="grid gap-3 sm:grid-cols-2">
+            <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {config.optionGroups.map((group) => (
                 <div key={group.key} className="rounded-md bg-muted p-3">
                   <dt className="text-xs text-muted-foreground">{group.label}</dt>

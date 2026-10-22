@@ -94,7 +94,7 @@ export function CustomizerForm({ config, product }: { config: CustomizerConfig; 
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_420px]">
+      <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_420px]">
         <div className="space-y-3">
           <StepCard
             number={1}
@@ -145,7 +145,7 @@ export function CustomizerForm({ config, product }: { config: CustomizerConfig; 
                     name="photos"
                     render={() => (
                       <FormItem>
-                        <div className={cn("grid gap-4", bothSides && "sm:grid-cols-2")}>
+                        <div className={cn("grid grid-cols-1 gap-4", bothSides && "sm:grid-cols-2")}>
                           <div className="space-y-1.5">
                             <FormLabel>{ubicacion === "Espalda" ? "Foto para la espalda" : "Foto para el frente"}</FormLabel>
                             <PhotoDropzone

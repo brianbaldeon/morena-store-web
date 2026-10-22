@@ -138,7 +138,7 @@ export function CheckoutView({ addresses, rules }: { addresses: Address[]; rules
           }
           form.handleSubmit(onSubmit)(event)
         }}
-        className="grid gap-8 lg:grid-cols-[1fr_380px]"
+        className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_380px]"
         noValidate
       >
         <div className="space-y-6">
@@ -160,7 +160,7 @@ export function CheckoutView({ addresses, rules }: { addresses: Address[]; rules
                   </FormItem>
                 )}
               />
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <FormField
                   control={form.control}
                   name="email"
@@ -203,7 +203,7 @@ export function CheckoutView({ addresses, rules }: { addresses: Address[]; rules
                       <RadioGroup
                         value={field.value}
                         onValueChange={field.onChange}
-                        className="grid gap-3 sm:grid-cols-2"
+                        className="grid grid-cols-1 gap-3 sm:grid-cols-2"
                       >
                         {[
                           {
@@ -259,7 +259,7 @@ export function CheckoutView({ addresses, rules }: { addresses: Address[]; rules
                       ))}
                     </div>
                   )}
-                  <div className="grid gap-4 sm:grid-cols-6">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-6">
                     <FormField
                       control={form.control}
                       name="street"
@@ -371,7 +371,7 @@ export function CheckoutView({ addresses, rules }: { addresses: Address[]; rules
           {step === 2 && (
             <section className="space-y-4 rounded-lg border p-5">
               <h2 className="font-semibold">Revisá tu pedido</h2>
-              <dl className="grid gap-4 text-sm sm:grid-cols-2">
+              <dl className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
                 <div className="bg-muted rounded-md p-3">
                   <dt className="text-muted-foreground text-xs">Contacto</dt>
                   <dd className="mt-1">

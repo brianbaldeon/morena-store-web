@@ -8,7 +8,7 @@ export default function Loading() {
       <PageContainer className="py-8">
         <Skeleton className="h-4 w-32" />
         <Skeleton className="mt-3 h-7 w-64" />
-        <div className="mt-6 grid gap-6 lg:grid-cols-[260px_1fr]">
+        <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[260px_1fr]">
           <div className="hidden space-y-3 lg:block">
             {Array.from({ length: 4 }, (_, i) => (
               <Skeleton key={i} className="h-40 w-full" />

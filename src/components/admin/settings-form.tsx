@@ -70,7 +70,7 @@ export function SettingsForm({ settings }: { settings: StoreSettings }) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-3xl space-y-6" noValidate>
         <section className="space-y-4 rounded-lg border p-5">
           <h2 className="font-semibold">Datos de la tienda</h2>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {text("storeName", "Nombre")}
             {text("email", "Email de contacto", "email")}
             {text("phone", "WhatsApp", "tel")}
@@ -79,7 +79,7 @@ export function SettingsForm({ settings }: { settings: StoreSettings }) {
         </section>
         <section className="space-y-4 rounded-lg border p-5">
           <h2 className="font-semibold">Envíos y producción</h2>
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {number("shippingCost", "Costo de envío (ARS)")}
             {number("freeShippingFrom", "Envío gratis desde (ARS)", "Se muestra la barra de progreso en el carrito.")}
             {number("productionDays", "Días de producción", "Para personalizados.")}

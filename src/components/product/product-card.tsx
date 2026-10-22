@@ -22,7 +22,7 @@ export function ProductCard({ product, className, priority }: ProductCardProps) 
             src={product.images[0]}
             alt={product.name}
             fill
-            priority={priority}
+            loading={priority ? "eager" : undefined}
             sizes="(min-width: 1280px) 300px, (min-width: 768px) 33vw, 50vw"
             className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
@@ -39,7 +39,7 @@ export function ProductCard({ product, className, priority }: ProductCardProps) 
             {product.name}
           </Link>
         </h3>
-        <div className="flex items-center justify-between gap-2 text-sm">
+        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5 text-sm">
           <PriceTag price={product.price} compareAtPrice={product.compareAtPrice} />
           <StockHint stock={product.stock} />
         </div>

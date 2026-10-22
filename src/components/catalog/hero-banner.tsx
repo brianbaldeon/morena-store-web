@@ -28,7 +28,7 @@ export function HeroBanner({
         src={image}
         alt=""
         fill
-        priority
+        preload
         sizes="100vw"
         className="-z-10 object-cover"
         style={{ objectPosition: imagePosition }}

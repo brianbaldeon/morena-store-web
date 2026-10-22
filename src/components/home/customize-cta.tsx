@@ -3,6 +3,7 @@ import Link from "next/link"
 import { ArrowRight, ImageUp, Scissors, SlidersHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { IMG } from "@/data/mock-products"
+import { cn } from "@/lib/utils"
 
 const STEPS = [
   { icon: ImageUp, title: "Subí tus fotos", text: "De vos, tu pareja, tu amigo o tu mascota." },
@@ -11,10 +12,10 @@ const STEPS = [
 ]
 
 /** Bloque "Personalizá tu muñeco" en 3 pasos (también se usa como "Cómo funciona"). */
-export function CustomizeCta({ hideCta }: { hideCta?: boolean }) {
+export function CustomizeCta({ hideCta, hideGallery }: { hideCta?: boolean; hideGallery?: boolean }) {
   return (
     <section className="overflow-hidden rounded-xl border bg-secondary">
-      <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2">
+      <div className={cn("grid grid-cols-1 items-center gap-8", !hideGallery && "lg:grid-cols-2")}>
         <div className="space-y-6 p-6 sm:p-10">
           <div>
             <p className="text-xs font-medium tracking-[0.2em] text-primary uppercase">Personalizados</p>
@@ -27,7 +28,7 @@ export function CustomizeCta({ hideCta }: { hideCta?: boolean }) {
               Convertimos tus fotos en muñecos, llaveros y prendas con estampado DTF. Un regalo que nadie más tiene.
             </p>
           </div>
-          <ol className="space-y-4">
+          <ol className={cn("space-y-4", hideGallery && "sm:grid sm:grid-cols-3 sm:gap-6 sm:space-y-0")}>
             {STEPS.map(({ icon: Icon, title, text }, i) => (
               <li key={title} className="flex gap-4">
                 <span className="flex size-10 shrink-0 items-center justify-center rounded-full border bg-background text-primary">
@@ -50,19 +51,27 @@ export function CustomizeCta({ hideCta }: { hideCta?: boolean }) {
             </Button>
           )}
         </div>
-        <div className="relative grid h-full min-h-80 grid-cols-2 gap-3 p-6 sm:p-10 lg:pl-0">
-          <div className="relative overflow-hidden rounded-lg bg-background">
-            <Image src={IMG.personalizado} alt="Muñeco personalizado" fill sizes="300px" className="object-cover" />
-          </div>
-          <div className="grid gap-3">
+        {!hideGallery && (
+          <div className="relative grid h-full min-h-80 grid-cols-2 gap-3 p-6 sm:p-10 lg:pl-0">
             <div className="relative overflow-hidden rounded-lg bg-background">
-              <Image src={IMG.diegoTelefono} alt="Remera con estampado DTF" fill sizes="300px" className="object-cover" />
+              <Image src={IMG.personalizado} alt="Muñeco personalizado" fill sizes="300px" className="object-cover" />
             </div>
-            <div className="relative overflow-hidden rounded-lg bg-background">
-              <Image src={IMG.michi} alt="Almohadón de mascota" fill sizes="300px" className="object-cover" />
+            <div className="grid gap-3">
+              <div className="relative overflow-hidden rounded-lg bg-background">
+                <Image
+                  src={IMG.diegoTelefono}
+                  alt="Remera con estampado DTF"
+                  fill
+                  sizes="300px"
+                  className="object-cover"
+                />
+              </div>
+              <div className="relative overflow-hidden rounded-lg bg-background">
+                <Image src={IMG.michi} alt="Almohadón de mascota" fill sizes="300px" className="object-cover" />
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   )

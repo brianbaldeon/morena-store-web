@@ -1,4 +1,14 @@
-import type { Address, Brand, Category, CustomOrder, Order, ProductWithRelations, StoreSettings, User } from "@/types"
+import type {
+  Address,
+  Brand,
+  Category,
+  CustomOrder,
+  Order,
+  ProductWithRelations,
+  ShowcaseWork,
+  StoreSettings,
+  User,
+} from "@/types"
 import type {
   BrandInput,
   CategoryInput,
@@ -6,6 +16,7 @@ import type {
   OrderStatusInput,
   ProductInput,
   SettingsInput,
+  ShowcaseWorkInput,
 } from "@/lib/validations/admin"
 import type { LoginInput, RegisterInput } from "@/lib/validations/auth"
 import type { AddressInput, CheckoutRequest, ProfileInput } from "@/lib/validations/checkout"
@@ -58,6 +69,11 @@ export const api = {
     create: (input: BrandInput) => send<Brand>("POST", "/artists", input),
     update: (id: string, input: BrandInput) => send<Brand>("PATCH", `/artists/${id}`, input),
     remove: (id: string) => remove(`/artists/${id}`),
+  },
+  showcase: {
+    create: (input: ShowcaseWorkInput) => send<ShowcaseWork>("POST", "/showcase", input),
+    update: (id: string, input: ShowcaseWorkInput) => send<ShowcaseWork>("PATCH", `/showcase/${id}`, input),
+    remove: (id: string) => remove(`/showcase/${id}`),
   },
   orders: {
     updateStatus: (id: string, input: OrderStatusInput) => send<Order>("PATCH", `/orders/${id}`, input),

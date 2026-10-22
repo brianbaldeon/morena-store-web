@@ -280,6 +280,7 @@ enum CustomizableType {
   REMERA
   BUZO
   LLAVERO
+  ALMOHADON
 }
 
 enum CustomOrderStatus {
@@ -323,6 +324,21 @@ model CustomOrderImage {
   customOrder CustomOrder @relation(fields: [customOrderId], references: [id], onDelete: Cascade)
 
   @@index([customOrderId])
+}
+
+/// Galería pública "Personalizados": trabajos ya entregados, solo para mostrar (no se venden).
+model ShowcaseWork {
+  id          String           @id @default(cuid())
+  title       String
+  description String?
+  type        CustomizableType
+  /// La primera imagen es la portada.
+  images      String[]
+  published   Boolean          @default(true)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([published, createdAt])
 }
 
 // ─── Ajustes de la tienda ─────────────────────────────────────

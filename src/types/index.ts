@@ -98,6 +98,18 @@ export interface Customization {
   notes: string
 }
 
+/** Trabajo personalizado ya entregado que se muestra en la galería "Personalizados". */
+export interface ShowcaseWork {
+  id: string
+  title: string
+  description: string | null
+  type: CustomizableType
+  /** La primera imagen es la portada. */
+  images: string[]
+  published: boolean
+  createdAt: string
+}
+
 // ─── Carrito ───────────────────────────────────────────────────
 
 export interface CartItem {

@@ -38,7 +38,7 @@ export function ProductGallery({ product }: { product: Product }) {
           src={images[active]}
           alt={product.name}
           fill
-          priority
+          preload
           sizes="(min-width: 1024px) 560px, 100vw"
           className="object-cover"
         />

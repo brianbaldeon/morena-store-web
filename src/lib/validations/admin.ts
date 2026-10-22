@@ -41,6 +41,17 @@ export const brandSchema = z.object({
 })
 export type BrandInput = z.infer<typeof brandSchema>
 
+export const showcaseWorkSchema = z.object({
+  title: z.string().min(3, "Mínimo 3 caracteres").max(80),
+  description: z.string().max(160, "Máximo 160 caracteres").optional(),
+  type: z.enum(["muneco", "remera", "buzo", "llavero", "almohadon"], {
+    errorMap: () => ({ message: "Elegí un tipo" }),
+  }),
+  images: z.array(z.string().min(1)).min(1, "Agregá al menos una foto"),
+  published: z.boolean(),
+})
+export type ShowcaseWorkInput = z.infer<typeof showcaseWorkSchema>
+
 export const settingsSchema = z.object({
   storeName: z.string().min(2),
   email: z.string().email("Email inválido"),

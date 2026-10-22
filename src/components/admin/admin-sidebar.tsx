@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   CreditCard,
+  Images,
   LayoutDashboard,
   Package,
   Settings,
@@ -50,6 +51,7 @@ const GROUPS = [
       { href: "/admin/productos", label: "Productos", icon: Package },
       { href: "/admin/categorias", label: "Categorías", icon: Tags },
       { href: "/admin/artistas", label: "Artistas", icon: Users },
+      { href: "/admin/trabajos", label: "Trabajos", icon: Images },
     ],
   },
   {

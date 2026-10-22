@@ -14,7 +14,7 @@ export default function AuthLayout({ children }: LayoutProps<"/">) {
         <p className="text-center text-xs text-muted-foreground">© 2026 Morena Store</p>
       </div>
       <aside className="relative hidden overflow-hidden bg-muted lg:block">
-        <Image src={IMG.diegoTelefono} alt="" fill priority sizes="50vw" className="object-cover" />
+        <Image src={IMG.diegoTelefono} alt="" fill preload sizes="50vw" className="object-cover" />
         <div className="absolute inset-0 bg-linear-to-t from-[oklch(0.25_0.03_255/0.85)] via-transparent to-transparent" />
         <div className="absolute inset-x-10 bottom-10 flex items-end gap-4 text-white">
           <div className="size-16 shrink-0 rounded-xl bg-white/15 p-1 backdrop-blur">

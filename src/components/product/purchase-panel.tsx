@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react"
 import Link from "next/link"
 import { ShoppingCart, Sparkles } from "lucide-react"
-import { toast } from "sonner"
 import type { ProductWithRelations } from "@/types"
 import { Button } from "@/components/ui/button"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
@@ -58,7 +57,6 @@ export function PurchasePanel({ product }: { product: ProductWithRelations }) {
       customization: null,
       quantity,
     })
-    toast.success("Agregado al carrito", { description: product.name })
     openCart()
   }
 
@@ -126,12 +124,12 @@ export function PurchasePanel({ product }: { product: ProductWithRelations }) {
         </fieldset>
       )}
 
-      <div className="flex gap-3">
-        <QuantityStepper value={quantity} onChange={setQuantity} max={Math.max(1, stock)} />
-        <Button size="lg" className="h-10 flex-1" onClick={addToCart} disabled={stock <= 0}>
-          <ShoppingCart /> {stock > 0 ? "Agregar al carrito" : "Sin stock"}
+      <div className="flex gap-2 sm:gap-3">
+        <QuantityStepper value={quantity} onChange={setQuantity} max={Math.max(1, stock)} className="shrink-0" />
+        <Button size="lg" className="h-10 min-w-0 flex-1 px-3" onClick={addToCart} disabled={stock <= 0}>
+          <ShoppingCart className="max-[379px]:hidden" /> {stock > 0 ? "Agregar al carrito" : "Sin stock"}
         </Button>
-        <FavoriteButton productId={product.id} productName={product.name} size="lg" className="size-10" />
+        <FavoriteButton productId={product.id} productName={product.name} size="lg" className="size-10 shrink-0" />
       </div>
 
       {product.isCustomizable && (

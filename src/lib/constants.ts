@@ -32,6 +32,14 @@ export const PRODUCT_TYPE_LABELS: Record<ProductType, string> = {
   OTRO: "Otros",
 }
 
+export const CUSTOMIZABLE_TYPE_LABELS: Record<CustomizableType, string> = {
+  muneco: "Muñecos",
+  remera: "Remeras",
+  buzo: "Buzos",
+  llavero: "Llaveros",
+  almohadon: "Almohadones",
+}
+
 export const SORT_LABELS: Record<SortOption, string> = {
   popular: "Populares",
   newest: "Más nuevos",

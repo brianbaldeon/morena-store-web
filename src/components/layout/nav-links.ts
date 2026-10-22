@@ -5,5 +5,5 @@ export const NAV_LINKS = [
   { href: "/categoria/remeras", label: "Remeras" },
   { href: "/categoria/buzos", label: "Buzos" },
   { href: "/categoria/almohadones", label: "Almohadones" },
-  { href: "/personalizar", label: "Personalizados" },
+  { href: "/personalizados", label: "Personalizados" },
 ]

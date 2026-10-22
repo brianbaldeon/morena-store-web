@@ -12,6 +12,7 @@ test.describe("Smoke: páginas cargan", () => {
     { path: "/categoria/almohadones", heading: /resultados?/i },
     { path: "/personalizar", heading: /qué querés personalizar/i },
     { path: "/personalizar/remera", heading: /remera dtf personalizada/i },
+    { path: "/personalizados", heading: /trabajos que ya hicimos/i },
     { path: "/carrito", heading: /tu carrito/i },
     { path: "/favoritos", heading: /favoritos/i },
   ]

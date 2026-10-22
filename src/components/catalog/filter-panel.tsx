@@ -2,13 +2,14 @@
 
 import type { Facets, FilterState } from "@/types"
 import { FilterSection } from "./filter-section"
-import { ArtistFilter, CategoryFilter, ColorFilter, CustomizableFilter, PriceFilter, SizeFilter } from "./filters"
+import { ArtistFilter, CategoryFilter, ColorFilter, PriceFilter, SizeFilter } from "./filters"
 
 export interface FilterPanelProps {
   filters: FilterState
   facets: Facets
   activeCount: number
   hideCategories?: boolean
+  hideColors?: boolean
   onChange: (patch: Partial<FilterState>) => void
   onReset: () => void
 }
@@ -18,7 +19,7 @@ function toggle(list: string[], value: string) {
 }
 
 /** Contenido del sidebar de filtros. Se usa en el aside (desktop) y en el Sheet (mobile). */
-export function FilterPanel({ filters, facets, activeCount, hideCategories, onChange, onReset }: FilterPanelProps) {
+export function FilterPanel({ filters, facets, activeCount, hideCategories, hideColors, onChange, onReset }: FilterPanelProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between rounded-lg border bg-card px-4 py-3.5">
@@ -66,15 +67,11 @@ export function FilterPanel({ filters, facets, activeCount, hideCategories, onCh
         </FilterSection>
       )}
 
-      {facets.colors.length > 0 && (
+      {!hideColors && facets.colors.length > 0 && (
         <FilterSection title="Color">
           <ColorFilter colors={facets.colors} selected={filters.colors} onChange={(colors) => onChange({ colors })} />
         </FilterSection>
       )}
-
-      <FilterSection title="Personalizable">
-        <CustomizableFilter checked={filters.customizable} onChange={(customizable) => onChange({ customizable })} />
-      </FilterSection>
     </div>
   )
 }

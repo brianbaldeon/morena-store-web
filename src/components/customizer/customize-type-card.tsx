@@ -31,7 +31,7 @@ export function CustomizeTypeCard({ config }: { config: CustomizerConfig }) {
             <Clock className="size-3.5" /> {config.productionDays}
           </span>
         </div>
-        <span className="mt-2 flex items-center gap-1 text-sm font-medium text-primary">
+        <span className="mt-2 flex items-center justify-center gap-1.5 rounded-md bg-primary py-2.5 text-sm font-semibold text-primary-foreground transition-colors group-hover:bg-primary/90">
           Empezar <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
         </span>
       </div>

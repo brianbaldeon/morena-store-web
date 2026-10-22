@@ -22,7 +22,7 @@ export default function CustomizePage() {
             ))}
           </div>
         </section>
-        <CustomizeCta />
+        <CustomizeCta hideCta />
       </PageContainer>
     </>
   )

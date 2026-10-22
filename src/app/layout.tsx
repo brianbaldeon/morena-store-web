@@ -12,8 +12,8 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   title: {
-    default: "Store Morena · Hecho a mano para vos",
-    template: "%s · Store Morena",
+    default: "Morena Store · Hecho a mano para vos",
+    template: "%s · Morena Store",
   },
   description:
     "Muñecos de tus artistas favoritos, llaveros, remeras y buzos con estampado DTF, y muñecos personalizados hechos a mano.",
@@ -26,7 +26,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col font-sans">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <TooltipProvider>{children}</TooltipProvider>
-          <Toaster position="bottom-right" richColors />
+          <Toaster position="top-right" richColors />
         </ThemeProvider>
       </body>
     </html>

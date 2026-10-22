@@ -49,9 +49,6 @@ export function ActiveFilterChips({
       remove: () => onChange({ price: [min, max] }),
     })
   }
-  if (filters.customizable) {
-    chips.push({ key: "custom", label: "Personalizables", remove: () => onChange({ customizable: false }) })
-  }
 
   if (chips.length === 0) return null
 

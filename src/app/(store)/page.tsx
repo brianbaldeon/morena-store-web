@@ -17,6 +17,7 @@ export default async function HomePage() {
     getFeaturedProducts(6),
     listProducts({ category: "munecos" }),
   ])
+  const topDolls = [...dolls].sort((a, b) => b.sales - a.sales).slice(0, 10)
 
   return (
     <>
@@ -38,7 +39,7 @@ export default async function HomePage() {
         </section>
 
         <section id="novedades" className="scroll-mt-32">
-          <SectionHeading title="Recién salidos del taller" description="Lo último que cosimos y estampamos." href="/productos" />
+          <SectionHeading title="Recién salidos del taller" description="Lo último que fabricamos." href="/productos" />
           <ProductRail products={newProducts} />
         </section>
 
@@ -55,7 +56,7 @@ export default async function HomePage() {
 
         <section>
           <SectionHeading title="Muñecos de tus ídolos" href="/categoria/munecos" />
-          <ProductRail products={dolls} />
+          <ProductRail products={topDolls} />
         </section>
 
         <section>

@@ -15,11 +15,14 @@ export function CartLineItem({ item, compact = false }: { item: CartItem; compac
   const removeItem = useCartStore((s) => s.removeItem)
   const setOpen = useCartStore((s) => s.setOpen)
   const variant = [item.size && `Talle ${item.size}`, item.color].filter(Boolean).join(" · ")
+  // Un personalizado no tiene ficha de producto propia (es un pedido a medida, no un ítem de catálogo):
+  // lo mandamos de vuelta al configurador en vez de a /productos/[slug].
+  const href = item.customization ? `/personalizar/${item.customization.type}` : `/productos/${item.slug}`
 
   return (
     <div className="flex gap-3 py-4">
       <Link
-        href={`/productos/${item.slug}`}
+        href={href}
         onClick={() => setOpen(false)}
         className={cn("relative shrink-0 overflow-hidden rounded-lg bg-muted", compact ? "h-24 w-18" : "h-32 w-24")}
       >
@@ -29,7 +32,7 @@ export function CartLineItem({ item, compact = false }: { item: CartItem; compac
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <Link
-              href={`/productos/${item.slug}`}
+              href={href}
               onClick={() => setOpen(false)}
               className="line-clamp-2 text-sm font-medium hover:text-primary"
             >

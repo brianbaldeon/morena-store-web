@@ -53,7 +53,7 @@ export function AdminShell({ pendingCustom, children }: { pendingCustom: number;
         <header className="sticky top-0 z-30 flex h-16 items-center gap-2 border-b bg-background/95 px-4 backdrop-blur">
           <SidebarTrigger />
           <Separator orientation="vertical" className="mx-1 h-5!" />
-          <span className="text-sm font-medium text-muted-foreground">Panel de Store Morena</span>
+          <span className="text-sm font-medium text-muted-foreground">Panel de Morena Store</span>
           <div className="ml-auto flex items-center gap-1">
             <ThemeToggle />
             <UserMenu />

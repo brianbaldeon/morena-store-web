@@ -19,6 +19,7 @@ export default async function ProductsPage(props: PageProps<"/productos">) {
         <CatalogView
           key={query}
           products={products}
+          hideColors
           resultsLabel={query ? `"${query}"` : "todo"}
           breadcrumb={[{ label: "Inicio", href: "/" }, { label: query ? "Búsqueda" : "Productos" }]}
         />

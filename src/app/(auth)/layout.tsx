@@ -11,7 +11,7 @@ export default function AuthLayout({ children }: LayoutProps<"/">) {
         <div className="flex flex-1 items-center justify-center py-10">
           <div className="w-full max-w-sm">{children}</div>
         </div>
-        <p className="text-center text-xs text-muted-foreground">© 2026 Store Morena</p>
+        <p className="text-center text-xs text-muted-foreground">© 2026 Morena Store</p>
       </div>
       <aside className="relative hidden overflow-hidden bg-muted lg:block">
         <Image src={IMG.diegoTelefono} alt="" fill priority sizes="50vw" className="object-cover" />

@@ -38,7 +38,7 @@ export const payments: Payment[] = [
 ]
 
 export const storeSettings: StoreSettings = {
-  storeName: "Store Morena",
+  storeName: "Morena Store",
   email: "hola@storemorena.com.ar",
   phone: "+54 9 11 5555-0000",
   instagram: "@store.morena",

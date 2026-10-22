@@ -32,10 +32,11 @@ interface CatalogViewProps {
   resultsLabel: string
   breadcrumb: { label: string; href?: string }[]
   hideCategories?: boolean
+  hideColors?: boolean
   initialFilters?: Partial<FilterState>
 }
 
-export function CatalogView({ products, resultsLabel, breadcrumb, hideCategories, initialFilters }: CatalogViewProps) {
+export function CatalogView({ products, resultsLabel, breadcrumb, hideCategories, hideColors, initialFilters }: CatalogViewProps) {
   const mounted = useMounted()
   const storedView = useUiStore((s) => s.catalogView)
   const setView = useUiStore((s) => s.setCatalogView)
@@ -70,6 +71,7 @@ export function CatalogView({ products, resultsLabel, breadcrumb, hideCategories
       facets={facets}
       activeCount={activeCount}
       hideCategories={hideCategories}
+      hideColors={hideColors}
       onChange={update}
       onReset={reset}
     />

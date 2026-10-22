@@ -26,7 +26,6 @@ function matches(product: ProductWithRelations, filters: FilterState, skip?: Fil
   if (skip !== "sizes" && filters.sizes.length && !filters.sizes.some((s) => product.sizes.includes(s))) return false
   if (skip !== "colors" && filters.colors.length && !filters.colors.some((c) => product.colors.some((pc) => pc.name === c)))
     return false
-  if (skip !== "customizable" && filters.customizable && !product.isCustomizable) return false
   return true
 }
 
@@ -102,7 +101,6 @@ export function countActiveFilters(filters: FilterState, bounds: [number, number
     filters.productTypes.length +
     filters.sizes.length +
     filters.colors.length +
-    (filters.customizable ? 1 : 0) +
     (filters.price[0] !== bounds[0] || filters.price[1] !== bounds[1] ? 1 : 0)
   )
 }

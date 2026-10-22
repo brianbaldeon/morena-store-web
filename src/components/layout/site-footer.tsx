@@ -70,7 +70,7 @@ export function SiteFooter() {
       </div>
       <Separator />
       <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-5 text-xs text-muted-foreground sm:flex-row sm:justify-between lg:px-6">
-        <p>© 2026 Store Morena. Hecho a mano con amor.</p>
+        <p>© 2026 Morena Store. Hecho a mano con amor.</p>
         <p>Precios en pesos argentinos (ARS).</p>
       </div>
     </footer>

@@ -16,6 +16,7 @@ import { useCartStore } from "@/store/cart"
 import { type CustomizerConfig, estimateCustomPrice } from "@/lib/constants"
 import { buildCustomizerSchema, type CustomizerInput } from "@/lib/validations/customizer"
 import { formatPrice } from "@/lib/format"
+import { cn } from "@/lib/utils"
 import { StepCard } from "./step-card"
 import { PhotoDropzone } from "./photo-dropzone"
 import { OptionChips } from "./option-chips"
@@ -43,6 +44,22 @@ export function CustomizerForm({ config, product }: { config: CustomizerConfig; 
 
   const unitPrice = estimateCustomPrice(config, options ?? {})
   const optionsComplete = config.optionGroups.every((g) => options?.[g.key])
+  // El estampado va atado al lado elegido, así que esa opción se contesta antes de subir fotos (Paso 1).
+  const detailGroups = config.optionGroups.filter((g) => !(config.hasPrintPreview && g.key === "ubicacion"))
+  const ubicacion = options?.ubicacion
+  const bothSides = ubicacion === "Frente y espalda"
+  const photosUploaded = photos.filter(Boolean)
+  const photosStepComplete = config.hasPrintPreview
+    ? bothSides
+      ? !!photos[0] && !!photos[1]
+      : !!photos[0]
+    : photosUploaded.length > 0
+
+  function setPhotoSlot(index: 0 | 1, value: string | undefined) {
+    const next: [string, string] = [photos[0] ?? "", photos[1] ?? ""]
+    next[index] = value ?? ""
+    form.setValue("photos", next.filter((v, i) => v || i === 0), { shouldValidate: true })
+  }
 
   function onSubmit(values: CustomizerInput) {
     addItem({
@@ -55,7 +72,12 @@ export function CustomizerForm({ config, product }: { config: CustomizerConfig; 
       size: values.options.talle ?? null,
       color: values.options.color ?? null,
       quantity: values.quantity,
-      customization: { type: config.type, photos: values.photos, options: values.options, notes: values.notes },
+      customization: {
+        type: config.type,
+        photos: values.photos.filter(Boolean),
+        options: values.options,
+        notes: values.notes,
+      },
     })
     toast.success("¡Personalizado agregado al carrito!", { description: "Lo vas a poder revisar antes de pagar." })
     openCart()
@@ -63,8 +85,10 @@ export function CustomizerForm({ config, product }: { config: CustomizerConfig; 
   }
 
   function onInvalid() {
-    if (form.formState.errors.photos) setOpenStep(1)
-    else if (form.formState.errors.options) setOpenStep(2)
+    const optionErrors = form.formState.errors.options
+    // Foto y ubicación viven en el Paso 1; el resto de las opciones, en el Paso 2.
+    if (form.formState.errors.photos || optionErrors?.ubicacion) setOpenStep(1)
+    else if (optionErrors) setOpenStep(2)
     toast.error("Te falta completar algunos pasos")
   }
 
@@ -74,47 +98,127 @@ export function CustomizerForm({ config, product }: { config: CustomizerConfig; 
         <div className="space-y-3">
           <StepCard
             number={1}
-            title="Subí tus fotos"
-            description={photos.length ? `${photos.length} foto(s) cargadas` : config.photoHint}
+            title={config.hasPrintPreview ? "Ubicación y fotos" : "Subí tus fotos"}
+            description={
+              config.hasPrintPreview
+                ? ubicacion
+                  ? `${photosUploaded.length} de ${bothSides ? 2 : 1} foto(s) cargadas`
+                  : "Elegí dónde va el estampado"
+                : photosUploaded.length
+                  ? `${photosUploaded.length} foto(s) cargadas`
+                  : config.photoHint
+            }
             open={openStep === 1}
-            complete={photos.length > 0}
-            hasError={!!errors.photos}
+            complete={photosStepComplete}
+            hasError={!!errors.photos || !!errors.options?.ubicacion}
             onOpenChange={(o) => setOpenStep(o ? 1 : null)}
           >
-            <FormField
-              control={form.control}
-              name="photos"
-              render={({ field }) => (
-                <FormItem>
-                  <PhotoDropzone
-                    value={field.value}
-                    onChange={(value) => {
-                      field.onChange(value)
-                      if (value.length > photos.length && !optionsComplete) setOpenStep(2)
-                    }}
-                    maxPhotos={config.maxPhotos}
-                    hint={config.photoHint}
-                    invalid={!!errors.photos}
+            {config.hasPrintPreview ? (
+              <div className="space-y-5">
+                <FormField
+                  control={form.control}
+                  name="options.ubicacion"
+                  render={({ field, fieldState }) => (
+                    <FormItem>
+                      <FormLabel>¿Dónde va el estampado?</FormLabel>
+                      <FormControl>
+                        <OptionChips
+                          label="Ubicación del estampado"
+                          options={config.optionGroups.find((g) => g.key === "ubicacion")?.options ?? []}
+                          value={field.value}
+                          onChange={field.onChange}
+                          invalid={!!fieldState.error}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {!ubicacion ? (
+                  <p className="rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground">
+                    Elegí primero dónde va el estampado para subir la foto que corresponde a cada lado.
+                  </p>
+                ) : (
+                  <FormField
+                    control={form.control}
+                    name="photos"
+                    render={() => (
+                      <FormItem>
+                        <div className={cn("grid gap-4", bothSides && "sm:grid-cols-2")}>
+                          <div className="space-y-1.5">
+                            <FormLabel>{ubicacion === "Espalda" ? "Foto para la espalda" : "Foto para el frente"}</FormLabel>
+                            <PhotoDropzone
+                              value={photos[0] ? [photos[0]] : []}
+                              onChange={(value) => {
+                                setPhotoSlot(0, value[0])
+                                if (value[0] && !optionsComplete) setOpenStep(2)
+                              }}
+                              maxPhotos={1}
+                              hint={config.photoHint}
+                              invalid={!!errors.photos}
+                            />
+                          </div>
+                          {bothSides && (
+                            <div className="space-y-1.5">
+                              <FormLabel>Foto para la espalda</FormLabel>
+                              <PhotoDropzone
+                                value={photos[1] ? [photos[1]] : []}
+                                onChange={(value) => {
+                                  setPhotoSlot(1, value[0])
+                                  if (value[0] && !optionsComplete) setOpenStep(2)
+                                }}
+                                maxPhotos={1}
+                                hint={config.photoHint}
+                                invalid={!!errors.photos}
+                              />
+                            </div>
+                          )}
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                )}
+              </div>
+            ) : (
+              <FormField
+                control={form.control}
+                name="photos"
+                render={({ field }) => (
+                  <FormItem>
+                    <PhotoDropzone
+                      value={field.value}
+                      onChange={(value) => {
+                        field.onChange(value)
+                        if (value.length > photos.length && !optionsComplete) setOpenStep(2)
+                      }}
+                      maxPhotos={config.maxPhotos}
+                      hint={config.photoHint}
+                      invalid={!!errors.photos}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
           </StepCard>
 
           <StepCard
             number={2}
             title="Elegí los detalles"
             description={
-              optionsComplete ? Object.values(options).join(" · ") : `${config.optionGroups.length} opciones para elegir`
+              optionsComplete
+                ? detailGroups.map((g) => options?.[g.key]).join(" · ")
+                : `${detailGroups.length} opciones para elegir`
             }
             open={openStep === 2}
-            complete={optionsComplete}
-            hasError={!!errors.options}
+            complete={detailGroups.every((g) => options?.[g.key])}
+            hasError={detailGroups.some((g) => !!errors.options?.[g.key])}
             onOpenChange={(o) => setOpenStep(o ? 2 : null)}
           >
             <div className="space-y-5">
-              {config.optionGroups.map((group) => (
+              {detailGroups.map((group) => (
                 <FormField
                   key={group.key}
                   control={form.control}
@@ -136,7 +240,19 @@ export function CustomizerForm({ config, product }: { config: CustomizerConfig; 
                   )}
                 />
               ))}
-              <Button type="button" variant="outline" size="sm" onClick={() => setOpenStep(3)}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={async () => {
+                  const valid = await form.trigger("options")
+                  if (valid) setOpenStep(3)
+                  else if (form.formState.errors.options?.ubicacion) {
+                    setOpenStep(1)
+                    toast.error("Te falta elegir dónde va el estampado")
+                  } else toast.error("Te falta elegir alguna opción")
+                }}
+              >
                 Siguiente paso
               </Button>
             </div>
@@ -157,6 +273,12 @@ export function CustomizerForm({ config, product }: { config: CustomizerConfig; 
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Notas para el taller (opcional)</FormLabel>
+                    {options?.tamano === "Personalizado" && (
+                      <p className="-mt-1 text-xs text-amber-600">
+                        Elegiste un tamaño personalizado: contanos acá el ancho x alto en cm que necesitás. El máximo
+                        que podemos estampar es 50x70 cm, así que tiene que ser igual o menor a esa medida.
+                      </p>
+                    )}
                     <FormControl>
                       <Textarea
                         rows={4}
@@ -191,7 +313,8 @@ export function CustomizerForm({ config, product }: { config: CustomizerConfig; 
               color={options?.color}
               placement={options?.ubicacion}
               size={options?.tamano}
-              image={photos[0]}
+              frontImage={photos[0] || undefined}
+              backImage={(bothSides ? photos[1] : photos[0]) || undefined}
             />
           ) : (
             <PhotoPreview photo={photos[0]} example={config.image} />

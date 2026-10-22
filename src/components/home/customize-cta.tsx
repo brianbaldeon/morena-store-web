@@ -11,7 +11,7 @@ const STEPS = [
 ]
 
 /** Bloque "Personalizá tu muñeco" en 3 pasos (también se usa como "Cómo funciona"). */
-export function CustomizeCta() {
+export function CustomizeCta({ hideCta }: { hideCta?: boolean }) {
   return (
     <section className="overflow-hidden rounded-xl border bg-secondary">
       <div className="grid items-center gap-8 lg:grid-cols-2">
@@ -42,11 +42,13 @@ export function CustomizeCta() {
               </li>
             ))}
           </ol>
-          <Button asChild size="lg">
-            <Link href="/personalizar">
-              Empezar a personalizar <ArrowRight />
-            </Link>
-          </Button>
+          {!hideCta && (
+            <Button asChild size="lg">
+              <Link href="/personalizar">
+                Empezar a personalizar <ArrowRight />
+              </Link>
+            </Button>
+          )}
         </div>
         <div className="relative grid h-full min-h-80 grid-cols-2 gap-3 p-6 sm:p-10 lg:pl-0">
           <div className="relative overflow-hidden rounded-lg bg-background">

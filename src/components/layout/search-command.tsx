@@ -82,7 +82,7 @@ export function SearchCommand({ items, className }: { items: SearchItem[]; class
                 />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-sm font-medium">{item.name}</span>
-                  <span className="block text-xs text-muted-foreground">{item.brand ?? "Store Morena"}</span>
+                  <span className="block text-xs text-muted-foreground">{item.brand ?? "Morena Store"}</span>
                 </span>
                 <span className="text-sm font-medium text-primary">{formatPrice(item.price)}</span>
               </button>

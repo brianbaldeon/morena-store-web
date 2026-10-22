@@ -6,7 +6,6 @@ import { Check, Search } from "lucide-react"
 import type { Brand, Category, ColorOption } from "@/types"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Slider } from "@/components/ui/slider"
-import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { formatPrice } from "@/lib/format"
@@ -226,18 +225,5 @@ export function ColorFilter({
         </ToggleGroupItem>
       ))}
     </ToggleGroup>
-  )
-}
-
-// ─── Personalizable ────────────────────────────────────────────
-
-export function CustomizableFilter({ checked, onChange }: { checked: boolean; onChange: (checked: boolean) => void }) {
-  return (
-    <div className="flex items-center justify-between gap-3">
-      <Label htmlFor="filter-customizable" className="font-normal">
-        Solo personalizables
-      </Label>
-      <Switch id="filter-customizable" checked={checked} onCheckedChange={onChange} />
-    </div>
   )
 }

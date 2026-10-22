@@ -1,4 +1,4 @@
-// Store Morena — modelo de datos (etapa 1: solo definición, sin migrar).
+// Morena Store — modelo de datos (etapa 1: solo definición, sin migrar).
 // Etapa 2: `npx prisma migrate dev` y reemplazar src/lib/services/* por consultas de Prisma.
 
 generator client {

@@ -1,9 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ImageIcon } from "lucide-react"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { COLORS } from "@/lib/constants"
+import { COLORS, PRINT_SIZE_CM } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 
 const TEE_PATH =
@@ -11,27 +11,49 @@ const TEE_PATH =
 const HOODIE_PATH =
   "M72 30 Q86 2 120 2 Q154 2 168 30 L222 58 L210 236 L186 236 L180 104 L180 246 L60 246 L60 104 L54 236 L30 236 L18 58 Z"
 
-/** Tamaño del estampado en % del ancho del pecho. */
-const PRINT_WIDTH: Record<string, number> = { "A5 (pecho)": 26, A4: 40, A3: 52 }
+// Área imprimible real dentro del dibujo (torso, sin mangas/cuello/ruedo), en % del contenedor.
+// El 50x70 cm (máximo soportado) debe calzar justo adentro de esta caja, sin salirse de la prenda.
+const PRINT_AREA = { top: 30, widthPct: 36, heightPct: 50 }
+// Escala cm → % usando como referencia el lado más limitante de cada medida (ancho o alto).
+const SCALE = Math.min(PRINT_AREA.widthPct / 50, PRINT_AREA.heightPct / 70)
 
 interface PrintMockupProps {
   garment: "remera" | "buzo"
   color?: string
   placement?: string
   size?: string
-  image?: string
+  /** Foto para el diseño de frente. */
+  frontImage?: string
+  /** Foto para el diseño de espalda (si no se manda, se repite la de frente). */
+  backImage?: string
 }
 
 /** Vista previa de la prenda con el diseño superpuesto (frente/espalda). */
-export function PrintMockup({ garment, color = "Blanco", placement = "Frente", size = "A4", image }: PrintMockupProps) {
+export function PrintMockup({
+  garment,
+  color = "Blanco",
+  placement = "Frente",
+  size = "40x40 cm",
+  frontImage,
+  backImage,
+}: PrintMockupProps) {
   const [side, setSide] = useState<"frente" | "espalda">("frente")
+
+  // Si el estampado va solo en una cara, mostramos esa cara automáticamente
+  // para que la vista previa no quede vacía al elegir "Espalda".
+  useEffect(() => {
+    if (placement === "Frente") setSide("frente")
+    else if (placement === "Espalda") setSide("espalda")
+  }, [placement])
+
   const fill = COLORS.find((c) => c.name === color)?.hex ?? "#FFFFFF"
   const showPrint =
     placement === "Frente y espalda" ||
     (placement === "Frente" && side === "frente") ||
     (placement === "Espalda" && side === "espalda")
-  const width = PRINT_WIDTH[size] ?? 40
-  const smallFrontLogo = side === "frente" && size === "A5 (pecho)"
+  const { width: cmWidth, height: cmHeight } = PRINT_SIZE_CM[size] ?? PRINT_SIZE_CM["40x40 cm"]
+  const width = cmWidth * SCALE
+  const image = side === "frente" ? frontImage : backImage
 
   return (
     <div className="space-y-3">
@@ -42,6 +64,9 @@ export function PrintMockup({ garment, color = "Blanco", placement = "Frente", s
         </TabsList>
       </Tabs>
       <div className="relative mx-auto aspect-square w-full max-w-sm rounded-lg bg-muted">
+        <span className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-sm">
+          {side === "frente" ? "Frente" : "Espalda"}
+        </span>
         <svg viewBox="0 0 240 250" className="absolute inset-[8%] size-[84%] drop-shadow-sm" aria-hidden>
           <path
             d={garment === "remera" ? TEE_PATH : HOODIE_PATH}
@@ -50,11 +75,17 @@ export function PrintMockup({ garment, color = "Blanco", placement = "Frente", s
             strokeWidth="1.5"
             strokeLinejoin="round"
           />
-          {garment === "remera" && side === "frente" && (
-            <path d="M100 8 Q120 28 140 8" fill="none" stroke="rgba(0,0,0,0.25)" strokeWidth="2" />
-          )}
-          {garment === "buzo" && side === "frente" && (
-            <path d="M88 170 L152 170 L160 206 L80 206 Z" fill="none" stroke="rgba(0,0,0,0.18)" strokeWidth="1.5" />
+          {side === "frente" ? (
+            <>
+              {/* Cinta de cuello, solo visible de frente */}
+              <path d="M94 10 Q120 32 146 10" fill="none" stroke="rgba(0,0,0,0.35)" strokeWidth="4" strokeLinecap="round" />
+              {garment === "buzo" && (
+                <path d="M88 170 L152 170 L160 206 L80 206 Z" fill="none" stroke="rgba(0,0,0,0.18)" strokeWidth="1.5" />
+              )}
+            </>
+          ) : (
+            // Etiqueta de tela, solo visible de espalda
+            <rect x="112" y="14" width="16" height="22" rx="2" fill="rgba(0,0,0,0.12)" stroke="rgba(0,0,0,0.25)" strokeWidth="1" />
           )}
         </svg>
         {showPrint && (
@@ -64,10 +95,10 @@ export function PrintMockup({ garment, color = "Blanco", placement = "Frente", s
               !image && "flex items-center justify-center border-2 border-dashed border-primary/60 bg-primary/5",
             )}
             style={{
-              top: smallFrontLogo ? "34%" : "32%",
-              left: smallFrontLogo ? "58%" : "50%",
-              width: `${smallFrontLogo ? 18 : width * 0.84}%`,
-              aspectRatio: "3 / 4",
+              top: `${PRINT_AREA.top}%`,
+              left: "50%",
+              width: `${width}%`,
+              aspectRatio: `${cmWidth} / ${cmHeight}`,
             }}
           >
             {image ? (
@@ -80,7 +111,8 @@ export function PrintMockup({ garment, color = "Blanco", placement = "Frente", s
         )}
       </div>
       <p className="text-center text-xs text-muted-foreground">
-        Vista previa aproximada. Te mandamos el diseño final para aprobar antes de estampar.
+        Estampado de {cmWidth}x{cmHeight} cm. Vista previa aproximada, te mandamos el diseño final para aprobar antes
+        de estampar.
       </p>
     </div>
   )

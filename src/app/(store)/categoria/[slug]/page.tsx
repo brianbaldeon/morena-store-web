@@ -42,6 +42,7 @@ export default async function CategoryPage(props: PageProps<"/categoria/[slug]">
         <CatalogView
           products={products}
           hideCategories
+          hideColors={slug === "remeras" || slug === "buzos"}
           resultsLabel={category.name.toLowerCase()}
           breadcrumb={[{ label: "Inicio", href: "/" }, { label: "Productos", href: "/productos" }, { label: category.name }]}
         />

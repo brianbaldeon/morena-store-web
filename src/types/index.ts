@@ -74,7 +74,6 @@ export interface FilterState {
   price: [number, number]
   sizes: string[]
   colors: string[]
-  customizable: boolean
   sort: SortOption
 }
 
@@ -90,7 +89,7 @@ export interface Facets {
 
 // ─── Personalización ───────────────────────────────────────────
 
-export type CustomizableType = "muneco" | "remera" | "buzo" | "llavero"
+export type CustomizableType = "muneco" | "remera" | "buzo" | "llavero" | "almohadon"
 
 export interface Customization {
   type: CustomizableType

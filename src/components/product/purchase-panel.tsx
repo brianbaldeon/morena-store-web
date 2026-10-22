@@ -66,7 +66,7 @@ export function PurchasePanel({ product }: { product: ProductWithRelations }) {
     <div className="space-y-6">
       <div className="space-y-2">
         <p className="text-sm text-muted-foreground">
-          {product.brand?.name ?? "Store Morena"} · {PRODUCT_TYPE_LABELS[product.productType]}
+          {product.brand?.name ?? "Morena Store"} · {PRODUCT_TYPE_LABELS[product.productType]}
         </p>
         <h1 className="text-3xl font-semibold tracking-tight">{product.name}</h1>
         <div className="flex items-center justify-between gap-3 text-xl">

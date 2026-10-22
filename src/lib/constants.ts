@@ -47,7 +47,6 @@ export const DEFAULT_FILTERS: Omit<FilterState, "price"> = {
   productTypes: [],
   sizes: [],
   colors: [],
-  customizable: false,
   sort: "popular",
 }
 
@@ -104,15 +103,24 @@ export interface CustomizerConfig {
 
 /** Recargos por opción del personalizador (precio estimado, se confirma al aprobar el diseño). */
 export const OPTION_SURCHARGES: Record<string, number> = {
-  "35 cm": 6000,
-  "45 cm": 12000,
+  "30 cm": 6000,
+  "40 cm": 12000,
+  "50 cm": 18000,
   "12 cm": 1500,
   "Caja de regalo": 2500,
-  Guitarra: 2000,
   "Frente y espalda": 4500,
-  A4: 1500,
-  A3: 3500,
+  "40x40 cm": 1500,
+  "50x70 cm": 3500,
+  Personalizado: 2500,
   "x3 (mismo diseño)": 9500,
+}
+
+/** Medidas reales (cm) de cada opción de tamaño de estampado, para la vista previa. */
+export const PRINT_SIZE_CM: Record<string, { width: number; height: number }> = {
+  "20x20 cm": { width: 20, height: 20 },
+  "40x40 cm": { width: 40, height: 40 },
+  "50x70 cm": { width: 50, height: 70 },
+  Personalizado: { width: 40, height: 40 },
 }
 
 export function estimateCustomPrice(config: CustomizerConfig, options: Record<string, string>) {
@@ -125,18 +133,16 @@ export const CUSTOMIZERS: Record<CustomizableType, CustomizerConfig> = {
     productSlug: "muneco-personalizado-de-tu-persona-favorita",
     title: "Muñeco personalizado",
     subtitle: "Vos, tu pareja o tu amigo, en versión muñeco",
-    description:
-      "Mandanos fotos de la persona y armamos un muñeco cosido a mano con su cara, ropa y accesorios.",
+    description: "Mandanos fotos de la persona y armamos un muñeco cosido a mano con su cara y su ropa.",
     image: "/products/peluches/peluche-michael-jackson-coleccion-01.jpeg",
     basePrice: 32000,
     productionDays: "10 a 15 días hábiles",
     maxPhotos: 4,
     photoHint: "Subí 2 a 4 fotos: una de frente con buena luz y otras de cuerpo entero.",
     optionGroups: [
-      { key: "tamano", label: "Tamaño", options: ["25 cm", "35 cm", "45 cm"] },
+      { key: "tamano", label: "Tamaño", options: ["20 cm", "30 cm", "40 cm"] },
       { key: "ropa", label: "Ropa", options: ["Como en la foto", "Remera y jean", "Camiseta de fútbol", "Vestido"] },
-      { key: "accesorio", label: "Accesorio", options: ["Ninguno", "Anteojos", "Gorra", "Guitarra", "Mate"] },
-      { key: "packaging", label: "Packaging", options: ["Bolsa kraft", "Caja de regalo"] },
+      { key: "packaging", label: "Empaque", options: ["Bolsa kraft", "Caja de regalo"] },
     ],
     hasPrintPreview: false,
   },
@@ -155,7 +161,11 @@ export const CUSTOMIZERS: Record<CustomizableType, CustomizerConfig> = {
       { key: "talle", label: "Talle", options: ["XS", "S", "M", "L", "XL", "XXL"] },
       { key: "color", label: "Color de la prenda", options: ["Negro", "Blanco", "Gris", "Azul"] },
       { key: "ubicacion", label: "Ubicación del estampado", options: ["Frente", "Espalda", "Frente y espalda"] },
-      { key: "tamano", label: "Tamaño del estampado", options: ["A5 (pecho)", "A4", "A3"] },
+      {
+        key: "tamano",
+        label: "Tamaño del estampado",
+        options: ["20x20 cm", "40x40 cm", "50x70 cm", "Personalizado"],
+      },
     ],
     hasPrintPreview: true,
   },
@@ -174,7 +184,11 @@ export const CUSTOMIZERS: Record<CustomizableType, CustomizerConfig> = {
       { key: "talle", label: "Talle", options: ["S", "M", "L", "XL", "XXL"] },
       { key: "color", label: "Color de la prenda", options: ["Negro", "Gris", "Azul", "Blanco"] },
       { key: "ubicacion", label: "Ubicación del estampado", options: ["Frente", "Espalda", "Frente y espalda"] },
-      { key: "tamano", label: "Tamaño del estampado", options: ["A5 (pecho)", "A4", "A3"] },
+      {
+        key: "tamano",
+        label: "Tamaño del estampado",
+        options: ["20x20 cm", "40x40 cm", "50x70 cm", "Personalizado"],
+      },
     ],
     hasPrintPreview: true,
   },
@@ -193,6 +207,24 @@ export const CUSTOMIZERS: Record<CustomizableType, CustomizerConfig> = {
       { key: "tamano", label: "Tamaño", options: ["8 cm", "12 cm"] },
       { key: "argolla", label: "Argolla", options: ["Plateada", "Dorada", "Mosquetón"] },
       { key: "cantidad", label: "Pack", options: ["x1", "x3 (mismo diseño)"] },
+    ],
+    hasPrintPreview: false,
+  },
+  almohadon: {
+    type: "almohadon",
+    productSlug: "almohadon-personalizado",
+    title: "Almohadón personalizado",
+    subtitle: "Tu mascota (o la de alguien) en almohadón",
+    description: "Mandanos fotos de tu mascota y armamos un almohadón cosido a mano con su forma y sus colores.",
+    image: "/products/almohadones/almohadones-gato2.jpeg",
+    basePrice: 24000,
+    productionDays: "10 a 12 días hábiles",
+    maxPhotos: 3,
+    photoHint: "Subí 1 a 3 fotos de tu mascota, de cuerpo entero y con buena luz.",
+    optionGroups: [
+      { key: "tamano", label: "Tamaño", options: ["30 cm", "40 cm", "50 cm"] },
+      { key: "forma", label: "Forma", options: ["Con la forma de tu mascota", "Rectangular clásico"] },
+      { key: "packaging", label: "Empaque", options: ["Bolsa kraft", "Caja de regalo"] },
     ],
     hasPrintPreview: false,
   },

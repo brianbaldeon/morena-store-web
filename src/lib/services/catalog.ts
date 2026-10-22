@@ -70,7 +70,20 @@ export async function getRelatedProducts(product: Product, limit = 4) {
 }
 
 export async function getFeaturedProducts(limit = 8) {
-  return db.products.filter((p) => p.isFeatured).slice(0, limit).map(withRelations)
+  // "Los más elegidos": best-sellers reales, con diversidad de categorías
+  // (máximo 2 por categoría) para no repetir lo que ya muestran otras secciones del home.
+  const perCategory = new Map<string, number>()
+  return db.products
+    .filter((p) => p.isFeatured)
+    .sort((a, b) => b.sales - a.sales)
+    .filter((p) => {
+      const count = perCategory.get(p.categoryId) ?? 0
+      if (count >= 2) return false
+      perCategory.set(p.categoryId, count + 1)
+      return true
+    })
+    .slice(0, limit)
+    .map(withRelations)
 }
 
 export async function getNewProducts(limit = 8) {

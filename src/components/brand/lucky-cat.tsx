@@ -5,7 +5,7 @@ interface LuckyCatProps {
   variant?: "coral" | "cream"
 }
 
-/** Maneki-neko de Store Morena (portado del front anterior). Los colores son parte de la ilustración. */
+/** Maneki-neko de Morena Store (portado del front anterior). Los colores son parte de la ilustración. */
 export function LuckyCat({ className, variant = "coral" }: LuckyCatProps) {
   const body = variant === "coral" ? "#FF8585" : "#FFE8D6"
   const accent = variant === "coral" ? "#E63946" : "#F4A261"

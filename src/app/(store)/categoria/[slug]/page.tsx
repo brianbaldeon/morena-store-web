@@ -3,7 +3,9 @@ import { notFound } from "next/navigation"
 import { HeroBanner } from "@/components/catalog/hero-banner"
 import { CatalogView } from "@/components/catalog/catalog-view"
 import { PageContainer } from "@/components/shared/page-container"
-import { getCategoryBySlug, listCategories, listProducts } from "@/lib/services/catalog"
+import { getCategoryBySlug, listCategories, searchCatalog } from "@/lib/services/catalog"
+import { PAGE_SIZE } from "@/lib/constants"
+import type { ProductType, SortOption } from "@/types"
 
 const HERO_LINES: Record<string, [string, string]> = {
   munecos: ["Tus ídolos", "en tela"],
@@ -11,6 +13,10 @@ const HERO_LINES: Record<string, [string, string]> = {
   remeras: ["Estampá", "tu historia"],
   buzos: ["Abrigo", "con onda"],
   almohadones: ["Tu michi", "en versión XL"],
+}
+
+function toArray(v: string | string[] | undefined) {
+  return typeof v === "string" && v ? v.split(",") : []
 }
 
 export async function generateStaticParams() {
@@ -26,10 +32,26 @@ export async function generateMetadata(props: PageProps<"/categoria/[slug]">): P
 
 export default async function CategoryPage(props: PageProps<"/categoria/[slug]">) {
   const { slug } = await props.params
+  const sp = await props.searchParams
   const category = await getCategoryBySlug(slug)
   if (!category) notFound()
 
-  const products = await listProducts({ category: slug })
+  const page = Math.max(1, Number(sp.page) || 1)
+  const priceMin = typeof sp.priceMin === "string" ? Number(sp.priceMin) : undefined
+  const priceMax = typeof sp.priceMax === "string" ? Number(sp.priceMax) : undefined
+
+  const { products, total, facets, filters } = await searchCatalog({
+    category: slug,
+    page,
+    pageSize: PAGE_SIZE,
+    brands: toArray(sp.brands),
+    categories: toArray(sp.categories),
+    productTypes: toArray(sp.productTypes) as ProductType[],
+    sizes: toArray(sp.sizes),
+    colors: toArray(sp.colors),
+    price: priceMin !== undefined && priceMax !== undefined ? [priceMin, priceMax] : undefined,
+    sort: typeof sp.sort === "string" ? (sp.sort as SortOption) : undefined,
+  })
 
   return (
     <>
@@ -41,6 +63,11 @@ export default async function CategoryPage(props: PageProps<"/categoria/[slug]">
       <PageContainer className="py-8">
         <CatalogView
           products={products}
+          total={total}
+          facets={facets}
+          filters={filters}
+          page={page}
+          pageSize={PAGE_SIZE}
           hideCategories
           hideColors={slug === "remeras" || slug === "buzos"}
           resultsLabel={category.name.toLowerCase()}

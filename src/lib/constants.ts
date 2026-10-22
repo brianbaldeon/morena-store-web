@@ -50,7 +50,7 @@ export const DEFAULT_FILTERS: Omit<FilterState, "price"> = {
   sort: "popular",
 }
 
-export const PAGE_SIZE = 9
+export const PAGE_SIZE = 10
 
 export const LOW_STOCK_THRESHOLD = 15
 

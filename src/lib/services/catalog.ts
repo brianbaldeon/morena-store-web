@@ -1,8 +1,9 @@
 import "server-only"
-import type { Brand, Category, Product, ProductWithRelations } from "@/types"
+import type { Brand, Category, FilterState, Product, ProductType, ProductWithRelations, SortOption } from "@/types"
 import { brands as seedBrands, categories as seedCategories, products as seedProducts } from "@/data/mock-products"
 import { slugify } from "@/lib/utils"
 import { COLORS, SIZES } from "@/lib/constants"
+import { computeFacets, filterProducts, getPriceBounds, sortProducts } from "@/lib/filters"
 import type { BrandInput, CategoryInput, ProductInput } from "@/lib/validations/admin"
 
 // Etapa 1: copias en memoria de los datos de prueba (se reinician al reiniciar el server).
@@ -49,6 +50,70 @@ export async function listProducts(params: { category?: string; q?: string; ids?
     })
   }
   return list.map(withRelations)
+}
+
+export interface SearchCatalogParams {
+  category?: string
+  q?: string
+  page: number
+  pageSize: number
+  brands?: string[]
+  categories?: string[]
+  productTypes?: ProductType[]
+  sizes?: string[]
+  colors?: string[]
+  /** Si no se manda, se usa el rango completo de precios del universo filtrado. */
+  price?: [number, number]
+  sort?: SortOption
+}
+
+export interface SearchCatalogResult {
+  /** Solo los productos de la página pedida — nunca el catálogo completo. */
+  products: ProductWithRelations[]
+  /** Total de resultados que matchean los filtros, para la paginación y el "X resultados". */
+  total: number
+  facets: ReturnType<typeof computeFacets>
+  /** Filtros ya resueltos (con el precio default puesto si no vino en la URL). */
+  filters: FilterState
+}
+
+/**
+ * Búsqueda paginada del catálogo: filtra, ordena y corta la página pedida en el servidor.
+ * Etapa 2: esto se traduce 1 a 1 a WHERE + ORDER BY + LIMIT/OFFSET (o cursor) contra la base real,
+ * así nunca bajamos el catálogo completo al cliente, sin importar cuántos productos haya.
+ */
+export async function searchCatalog(params: SearchCatalogParams): Promise<SearchCatalogResult> {
+  let list = db.products
+  if (params.category) {
+    const category = db.categories.find((c) => c.slug === params.category)
+    list = category ? list.filter((p) => p.categoryId === category.id) : []
+  }
+  if (params.q) {
+    const q = params.q.toLowerCase()
+    list = list.filter((p) => {
+      const brand = db.brands.find((b) => b.id === p.brandId)
+      return p.name.toLowerCase().includes(q) || brand?.name.toLowerCase().includes(q)
+    })
+  }
+  const scoped = list.map(withRelations)
+
+  const filters: FilterState = {
+    brands: params.brands ?? [],
+    categories: params.categories ?? [],
+    productTypes: params.productTypes ?? [],
+    sizes: params.sizes ?? [],
+    colors: params.colors ?? [],
+    price: params.price ?? getPriceBounds(scoped),
+    sort: params.sort ?? "popular",
+  }
+
+  const facets = computeFacets(scoped, filters)
+  const matched = sortProducts(filterProducts(scoped, filters), filters.sort)
+  const total = matched.length
+  const start = (params.page - 1) * params.pageSize
+  const products = matched.slice(start, start + params.pageSize)
+
+  return { products, total, facets, filters }
 }
 
 export async function getProductBySlug(slug: string) {

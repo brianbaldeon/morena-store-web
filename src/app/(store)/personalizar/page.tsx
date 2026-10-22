@@ -13,6 +13,7 @@ export default function CustomizePage() {
     <>
       <HeroBanner lines={["Hacelo", "tuyo"]} eyebrow="Personalizados" image={IMG.personalizado} imagePosition="center 20%" targetId="tipos" />
       <PageContainer className="space-y-14 py-10">
+        <CustomizeCta hideCta />
         <section id="tipos" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold tracking-tight">¿Qué querés personalizar?</h2>
           <p className="mt-1 mb-6 text-sm text-muted-foreground">Elegí el producto y seguí los pasos. Toma menos de 2 minutos.</p>
@@ -22,7 +23,6 @@ export default function CustomizePage() {
             ))}
           </div>
         </section>
-        <CustomizeCta hideCta />
       </PageContainer>
     </>
   )

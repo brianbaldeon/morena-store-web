@@ -2,7 +2,6 @@ import { HeroBanner } from "@/components/catalog/hero-banner"
 import { PageContainer } from "@/components/shared/page-container"
 import { SectionHeading } from "@/components/shared/section-heading"
 import { ProductRail } from "@/components/product/product-rail"
-import { ProductCard } from "@/components/product/product-card"
 import { CategoryTiles } from "@/components/home/category-tiles"
 import { CustomizeCta } from "@/components/home/customize-cta"
 import { Testimonials } from "@/components/home/testimonials"
@@ -47,11 +46,7 @@ export default async function HomePage() {
 
         <section>
           <SectionHeading title="Los más elegidos" href="/productos" />
-          <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3">
-            {featured.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          <ProductRail products={featured} />
         </section>
 
         <section>

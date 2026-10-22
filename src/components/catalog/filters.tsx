@@ -114,6 +114,17 @@ export function PriceFilter({
   const peak = Math.max(1, ...histogram)
   const step = 500
 
+  // El valor visible se actualiza al instante arrastrando, pero onChange (que navega al servidor)
+  // recién se dispara al soltar el slider o salir del input — así no se spamea una navegación por pixel.
+  // Si `value` cambia desde afuera (reset, chip "quitar"), sincronizamos `draft` durante el render
+  // en vez de en un efecto, para no disparar un render en cascada.
+  const [draft, setDraft] = useState(value)
+  const [synced, setSynced] = useState(value)
+  if (value[0] !== synced[0] || value[1] !== synced[1]) {
+    setSynced(value)
+    setDraft(value)
+  }
+
   function clamp(n: number) {
     return Math.min(max, Math.max(min, Number.isNaN(n) ? min : n))
   }
@@ -123,7 +134,7 @@ export function PriceFilter({
       <div className="flex h-14 items-end gap-0.5" aria-hidden>
         {histogram.map((count, i) => {
           const bucketStart = min + (span / histogram.length) * i
-          const inRange = bucketStart >= value[0] - span / histogram.length && bucketStart <= value[1]
+          const inRange = bucketStart >= draft[0] - span / histogram.length && bucketStart <= draft[1]
           return (
             <div
               key={i}
@@ -137,25 +148,28 @@ export function PriceFilter({
         min={min}
         max={max}
         step={step}
-        value={value}
-        onValueChange={(v) => onChange([v[0], v[1]] as [number, number])}
+        value={draft}
+        onValueChange={(v) => setDraft([v[0], v[1]])}
+        onValueCommit={(v) => onChange([v[0], v[1]])}
         aria-label="Rango de precio"
         className="-mt-1.5"
       />
       <div className="flex justify-between text-[11px] text-muted-foreground">
-        <span>{formatPrice(value[0])}</span>
-        <span>{formatPrice(value[1])}</span>
+        <span>{formatPrice(draft[0])}</span>
+        <span>{formatPrice(draft[1])}</span>
       </div>
       <div className="flex items-center gap-2">
         <input
           type="number"
           inputMode="numeric"
           aria-label="Precio mínimo"
-          value={value[0]}
+          value={draft[0]}
           min={min}
-          max={value[1]}
+          max={draft[1]}
           step={step}
-          onChange={(e) => onChange([Math.min(clamp(e.target.valueAsNumber), value[1]), value[1]])}
+          onChange={(e) => setDraft([clamp(e.target.valueAsNumber), draft[1]])}
+          onBlur={() => onChange([Math.min(draft[0], draft[1]), draft[1]])}
+          onKeyDown={(e) => e.key === "Enter" && onChange([Math.min(draft[0], draft[1]), draft[1]])}
           className="h-9 w-full min-w-0 rounded-md border bg-background px-3 text-sm outline-none focus:border-primary"
         />
         <span className="text-muted-foreground">—</span>
@@ -163,11 +177,13 @@ export function PriceFilter({
           type="number"
           inputMode="numeric"
           aria-label="Precio máximo"
-          value={value[1]}
-          min={value[0]}
+          value={draft[1]}
+          min={draft[0]}
           max={max}
           step={step}
-          onChange={(e) => onChange([value[0], Math.max(clamp(e.target.valueAsNumber), value[0])])}
+          onChange={(e) => setDraft([draft[0], clamp(e.target.valueAsNumber)])}
+          onBlur={() => onChange([draft[0], Math.max(draft[0], draft[1])])}
+          onKeyDown={(e) => e.key === "Enter" && onChange([draft[0], Math.max(draft[0], draft[1])])}
           className="h-9 w-full min-w-0 rounded-md border bg-background px-3 text-sm outline-none focus:border-primary"
         />
       </div>

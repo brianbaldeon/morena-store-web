@@ -1,9 +1,10 @@
 "use client"
 
-import { Fragment, useMemo, useState } from "react"
+import { Fragment, useState, useTransition } from "react"
 import Link from "next/link"
-import { SlidersHorizontal } from "lucide-react"
-import type { FilterState, ProductWithRelations } from "@/types"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { Loader2, SlidersHorizontal } from "lucide-react"
+import type { Facets, FilterState, ProductWithRelations } from "@/types"
 import { Button } from "@/components/ui/button"
 import {
   Breadcrumb,
@@ -19,50 +20,78 @@ import { ProductRow } from "@/components/product/product-row"
 import { EmptyState } from "@/components/shared/empty-state"
 import { useUiStore } from "@/store/ui"
 import { useMounted } from "@/hooks/use-mounted"
-import { computeFacets, countActiveFilters, createInitialFilters, filterProducts, sortProducts } from "@/lib/filters"
-import { PAGE_SIZE } from "@/lib/constants"
+import { countActiveFilters, filtersToSearchParams } from "@/lib/filters"
+import { DEFAULT_FILTERS } from "@/lib/constants"
+import { cn } from "@/lib/utils"
 import { FilterPanel } from "./filter-panel"
 import { CatalogToolbar } from "./catalog-toolbar"
 import { ActiveFilterChips } from "./active-filter-chips"
 import { CatalogPagination } from "./catalog-pagination"
 
 interface CatalogViewProps {
+  /** Ya viene recortado a la página actual — el servidor nunca manda el catálogo completo. */
   products: ProductWithRelations[]
+  /** Total de resultados que matchean los filtros (para el "X resultados" y la paginación). */
+  total: number
+  facets: Facets
+  filters: FilterState
+  page: number
+  pageSize: number
   /** Texto de "N resultados para ___". */
   resultsLabel: string
   breadcrumb: { label: string; href?: string }[]
   hideCategories?: boolean
   hideColors?: boolean
-  initialFilters?: Partial<FilterState>
 }
 
-export function CatalogView({ products, resultsLabel, breadcrumb, hideCategories, hideColors, initialFilters }: CatalogViewProps) {
+/**
+ * Filtros, orden y paginación viven en la URL (searchParams). Cada cambio navega con router.push
+ * dentro de un useTransition, así React Server Components vuelve a resolver la página/categoría
+ * correspondiente sin perder el scroll ni parpadear la página entera (eso lo reserva loading.tsx
+ * para las navegaciones "de verdad" hacia esta ruta).
+ */
+export function CatalogView({
+  products,
+  total,
+  facets,
+  filters,
+  page,
+  pageSize,
+  resultsLabel,
+  breadcrumb,
+  hideCategories,
+  hideColors,
+}: CatalogViewProps) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const [isPending, startTransition] = useTransition()
+
   const mounted = useMounted()
   const storedView = useUiStore((s) => s.catalogView)
   const setView = useUiStore((s) => s.setCatalogView)
   const view = mounted ? storedView : "grid"
-
-  // Estado local: filtros y página. Calculados: resultados, facetas.
-  const [filters, setFilters] = useState<FilterState>(() => createInitialFilters(products, initialFilters))
-  const [page, setPage] = useState(1)
   const [sheetOpen, setSheetOpen] = useState(false)
 
-  const results = useMemo(() => sortProducts(filterProducts(products, filters), filters.sort), [products, filters])
-  const facets = useMemo(() => computeFacets(products, filters), [products, filters])
-  const activeCount = useMemo(() => countActiveFilters(filters, facets.priceRange), [filters, facets.priceRange])
+  const activeCount = countActiveFilters(filters, facets.priceRange)
+  const totalPages = Math.max(1, Math.ceil(total / pageSize))
 
-  const totalPages = Math.max(1, Math.ceil(results.length / PAGE_SIZE))
-  const currentPage = Math.min(page, totalPages)
-  const visible = results.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+  function navigate(nextFilters: FilterState, nextPage: number) {
+    const params = filtersToSearchParams(nextFilters, facets.priceRange)
+    const q = searchParams.get("q")
+    if (q) params.set("q", q)
+    if (nextPage > 1) params.set("page", String(nextPage))
+    startTransition(() => {
+      router.push(params.size ? `${pathname}?${params.toString()}` : pathname, { scroll: false })
+    })
+  }
 
   function update(patch: Partial<FilterState>) {
-    setFilters((prev) => ({ ...prev, ...patch }))
-    setPage(1)
+    navigate({ ...filters, ...patch }, 1)
   }
 
   function reset() {
-    setFilters(createInitialFilters(products, { sort: filters.sort }))
-    setPage(1)
+    navigate({ ...DEFAULT_FILTERS, price: facets.priceRange, sort: filters.sort }, 1)
   }
 
   const panel = (
@@ -97,8 +126,9 @@ export function CatalogView({ products, resultsLabel, breadcrumb, hideCategories
           ))}
         </BreadcrumbList>
       </Breadcrumb>
-      <h2 className="mt-3 text-2xl font-semibold tracking-tight" aria-live="polite">
-        {results.length} {results.length === 1 ? "resultado" : "resultados"} para {resultsLabel}
+      <h2 className="mt-3 flex items-center gap-2 text-2xl font-semibold tracking-tight" aria-live="polite">
+        {total} {total === 1 ? "resultado" : "resultados"} para {resultsLabel}
+        {isPending && <Loader2 className="size-4 animate-spin text-muted-foreground" aria-label="Actualizando" />}
       </h2>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[260px_1fr]">
@@ -125,12 +155,12 @@ export function CatalogView({ products, resultsLabel, breadcrumb, hideCategories
                 <SheetContent side="left" className="w-full gap-0 overflow-y-auto sm:max-w-sm">
                   <SheetHeader>
                     <SheetTitle>Filtros</SheetTitle>
-                    <SheetDescription>{results.length} resultados</SheetDescription>
+                    <SheetDescription>{total} resultados</SheetDescription>
                   </SheetHeader>
                   <div className="px-4 pb-24">{panel}</div>
                   <div className="fixed bottom-0 w-full border-t bg-background p-4 sm:max-w-sm">
                     <Button className="w-full" onClick={() => setSheetOpen(false)}>
-                      Ver {results.length} resultados
+                      Ver {total} resultados
                     </Button>
                   </div>
                 </SheetContent>
@@ -140,27 +170,29 @@ export function CatalogView({ products, resultsLabel, breadcrumb, hideCategories
 
           <ActiveFilterChips filters={filters} facets={facets} onChange={update} />
 
-          {results.length === 0 ? (
-            <EmptyState
-              title="No encontramos productos"
-              description="Probá quitando algún filtro o buscá otra cosa."
-              action={<Button onClick={reset}>Limpiar filtros</Button>}
-            />
-          ) : view === "grid" ? (
-            <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3">
-              {visible.map((product, i) => (
-                <ProductCard key={product.id} product={product} priority={i < 3} />
-              ))}
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {visible.map((product) => (
-                <ProductRow key={product.id} product={product} />
-              ))}
-            </div>
-          )}
+          <div className={cn("transition-opacity", isPending && "opacity-60")} aria-busy={isPending}>
+            {products.length === 0 ? (
+              <EmptyState
+                title="No encontramos productos"
+                description="Probá quitando algún filtro o buscá otra cosa."
+                action={<Button onClick={reset}>Limpiar filtros</Button>}
+              />
+            ) : view === "grid" ? (
+              <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3">
+                {products.map((product, i) => (
+                  <ProductCard key={product.id} product={product} priority={i < 3} />
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {products.map((product) => (
+                  <ProductRow key={product.id} product={product} />
+                ))}
+              </div>
+            )}
+          </div>
 
-          <CatalogPagination page={currentPage} totalPages={totalPages} onPageChange={setPage} />
+          <CatalogPagination page={page} totalPages={totalPages} onPageChange={(p) => navigate(filters, p)} />
         </div>
       </div>
     </div>

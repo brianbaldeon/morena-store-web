@@ -94,6 +94,20 @@ export function buildHistogram(prices: number[], [min, max]: [number, number], b
   return counts
 }
 
+/** Serializa los filtros activos a querystring, para navegar (y así pedirle al servidor la página/filtro correcto). */
+export function filtersToSearchParams(filters: FilterState, bounds: [number, number]) {
+  const params = new URLSearchParams()
+  if (filters.brands.length) params.set("brands", filters.brands.join(","))
+  if (filters.categories.length) params.set("categories", filters.categories.join(","))
+  if (filters.productTypes.length) params.set("productTypes", filters.productTypes.join(","))
+  if (filters.sizes.length) params.set("sizes", filters.sizes.join(","))
+  if (filters.colors.length) params.set("colors", filters.colors.join(","))
+  if (filters.price[0] !== bounds[0]) params.set("priceMin", String(filters.price[0]))
+  if (filters.price[1] !== bounds[1]) params.set("priceMax", String(filters.price[1]))
+  if (filters.sort !== "popular") params.set("sort", filters.sort)
+  return params
+}
+
 export function countActiveFilters(filters: FilterState, bounds: [number, number]) {
   return (
     filters.brands.length +

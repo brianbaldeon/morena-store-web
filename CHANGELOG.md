@@ -4,6 +4,16 @@ Registro de los ajustes que vamos haciendo al front, para no perder el hilo de q
 
 ## 2026-10-22
 
+### Suite de testing profesional (unit, integración, E2E/smoke, regresión)
+- **Problema:** el proyecto no tenía ningún framework de testing instalado. Cada cambio se verificaba a mano, sin red de seguridad contra romper algo ya arreglado.
+- **Solución:** se armó una pirámide de testing completa — ver detalle de casos, cobertura y cómo correrla en `TESTING.md`:
+  - **Vitest** (unit + integración, ~2s): 57 tests sobre la lógica de filtros/paginación/precio/validación del personalizador y componentes con bugs ya corregidos (`PrintMockup`, `FilterPanel`).
+  - **Playwright** (E2E/smoke, ~14s): 24 tests de caja negra sobre flujos reales — carga de páginas, filtros/orden/paginación del catálogo, el personalizador de remera, agregar al carrito, consistencia del home.
+  - Scripts nuevos: `npm run test`, `npm run test:watch`, `npm run test:e2e`, `npm run test:all`.
+- Se corrigieron de paso 2 errores de lint (`react-hooks/set-state-in-effect`) detectados al escribir los tests, en `PrintMockup` y `PriceFilter` — ambos sincronizaban estado desde un `useEffect`, ahora se sincronizan durante el render.
+- Se verificó que la suite detecta regresiones reales: se revirtió a mano el fix de `PrintMockup` (bug de "Espalda no muestra nada") y el test de integración falló inmediatamente señalando la causa; se restauró el fix y volvió a pasar.
+- Cada uno de los bugs corregidos esta sesión (ver más abajo) tiene ahora un test de regresión con su ID (`REG-xx` en `TESTING.md`), así no puede volver a colarse sin que la suite lo marque.
+
 ### Rendimiento: paginación real en el servidor (pensando en 500+ productos)
 - **Problema:** `/productos` y `/categoria/[slug]` traían el catálogo/categoría completo al navegador en cada carga, y recién ahí se filtraba y se cortaban los productos a mostrar. Con pocos productos mock no se nota, pero con un catálogo real de cientos de productos sería lentísimo.
 - **Solución:** nueva función `searchCatalog()` en `src/lib/services/catalog.ts` que filtra, ordena y pagina **en el servidor**, devolviendo `{ products, total, facets, filters }` — `products` es solo la página pedida (10 por página, nunca el catálogo entero).

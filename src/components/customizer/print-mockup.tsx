@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { ImageIcon } from "lucide-react"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { COLORS, PRINT_SIZE_CM } from "@/lib/constants"
@@ -37,14 +37,17 @@ export function PrintMockup({
   frontImage,
   backImage,
 }: PrintMockupProps) {
-  const [side, setSide] = useState<"frente" | "espalda">("frente")
+  const [side, setSide] = useState<"frente" | "espalda">(placement === "Espalda" ? "espalda" : "frente")
 
-  // Si el estampado va solo en una cara, mostramos esa cara automáticamente
-  // para que la vista previa no quede vacía al elegir "Espalda".
-  useEffect(() => {
+  // Si el estampado va solo en una cara, mostramos esa cara automáticamente para que la vista
+  // previa no quede vacía al elegir "Espalda". Sincronizamos durante el render (no en un efecto)
+  // para no disparar un render en cascada.
+  const [syncedPlacement, setSyncedPlacement] = useState(placement)
+  if (placement !== syncedPlacement) {
+    setSyncedPlacement(placement)
     if (placement === "Frente") setSide("frente")
     else if (placement === "Espalda") setSide("espalda")
-  }, [placement])
+  }
 
   const fill = COLORS.find((c) => c.name === color)?.hex ?? "#FFFFFF"
   const showPrint =
@@ -64,7 +67,10 @@ export function PrintMockup({
         </TabsList>
       </Tabs>
       <div className="relative mx-auto aspect-square w-full max-w-sm rounded-lg bg-muted">
-        <span className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-sm">
+        <span
+          data-testid="mockup-side-badge"
+          className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-sm"
+        >
           {side === "frente" ? "Frente" : "Espalda"}
         </span>
         <svg viewBox="0 0 240 250" className="absolute inset-[8%] size-[84%] drop-shadow-sm" aria-hidden>

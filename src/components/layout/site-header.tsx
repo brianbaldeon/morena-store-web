@@ -34,7 +34,7 @@ export async function SiteHeader() {
           >
             <Sparkles className="size-4 text-primary" /> Personalizá
           </Link>
-          <ThemeToggle className="hidden sm:flex" />
+          <ThemeToggle className="hidden md:flex" />
           <UserMenu />
         </div>
       </div>

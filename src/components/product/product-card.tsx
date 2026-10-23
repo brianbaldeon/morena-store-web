@@ -4,7 +4,7 @@ import type { ProductWithRelations } from "@/types"
 import { cn } from "@/lib/utils"
 import { ProductBadges } from "./product-badge"
 import { FavoriteButton } from "./favorite-button"
-import { PriceTag, StockHint } from "./price-tag"
+import { PriceTag } from "./price-tag"
 
 interface ProductCardProps {
   product: ProductWithRelations
@@ -12,7 +12,7 @@ interface ProductCardProps {
   priority?: boolean
 }
 
-/** Card de la referencia: imagen con badge, artista + ♡, nombre, precio en acento + stock bajo en rojo. */
+/** Card de la referencia: imagen con badge, artista + ♡, nombre y precio en acento. El stock se ve solo en el detalle. */
 export function ProductCard({ product, className, priority }: ProductCardProps) {
   return (
     <article className={cn("group relative", className)}>
@@ -39,10 +39,7 @@ export function ProductCard({ product, className, priority }: ProductCardProps) 
             {product.name}
           </Link>
         </h3>
-        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5 text-sm">
-          <PriceTag price={product.price} compareAtPrice={product.compareAtPrice} />
-          <StockHint stock={product.stock} />
-        </div>
+        <PriceTag price={product.price} compareAtPrice={product.compareAtPrice} className="text-sm" />
       </div>
     </article>
   )

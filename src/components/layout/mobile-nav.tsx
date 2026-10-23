@@ -1,9 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useSyncExternalStore } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, Sparkles } from "lucide-react"
+import { useTheme } from "next-themes"
+import { Menu, Moon, Sparkles, Sun } from "lucide-react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Logo } from "@/components/brand/logo"
 import { cn } from "@/lib/utils"
@@ -50,8 +51,48 @@ export function MobileNav() {
           >
             <Sparkles className="size-4" /> Personalizá el tuyo
           </Link>
+          <MobileThemeSelector />
         </nav>
       </SheetContent>
     </Sheet>
+  )
+}
+
+const THEME_OPTIONS = [
+  { value: "light", label: "Claro", icon: Sun },
+  { value: "dark", label: "Oscuro", icon: Moon },
+] as const
+
+function MobileThemeSelector() {
+  // resolvedTheme: si el tema guardado es "system", resalta el que se está viendo.
+  const { resolvedTheme: theme, setTheme } = useTheme()
+  // El tema solo se conoce en el cliente; evitamos mismatch de hidratación.
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  )
+
+  return (
+    <div className="mt-6 border-t pt-4">
+      <p className="mb-2 px-3 text-xs font-medium text-muted-foreground">Tema</p>
+      <div className="grid grid-cols-2 gap-1 rounded-lg border p-1">
+        {THEME_OPTIONS.map(({ value, label, icon: Icon }) => (
+          <button
+            key={value}
+            type="button"
+            onClick={() => setTheme(value)}
+            aria-pressed={mounted && theme === value}
+            className={cn(
+              "flex flex-col items-center gap-1 rounded-md px-2 py-2 text-xs hover:bg-muted",
+              mounted && theme === value && "bg-muted font-medium text-primary",
+            )}
+          >
+            <Icon className="size-4" />
+            {label}
+          </button>
+        ))}
+      </div>
+    </div>
   )
 }

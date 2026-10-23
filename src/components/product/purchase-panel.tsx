@@ -12,7 +12,7 @@ import { useCartStore } from "@/store/cart"
 import { PRODUCT_TYPE_LABELS } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 import { FavoriteButton } from "./favorite-button"
-import { PriceTag, StockHint } from "./price-tag"
+import { PriceTag } from "./price-tag"
 
 const CUSTOMIZER_BY_TYPE: Record<string, string> = {
   MUNECO: "/personalizar/muneco",
@@ -39,6 +39,8 @@ export function PurchasePanel({ product }: { product: ProductWithRelations }) {
     const match = product.variants.filter((v) => (!size || v.size === size) && (!color || v.color === color))
     return match.reduce((acc, v) => acc + v.stock, 0)
   }, [product, size, color])
+  // Si al cambiar talle/color baja el stock, la cantidad elegida no puede quedar por encima.
+  const qty = Math.min(quantity, Math.max(1, stock))
 
   function addToCart() {
     if ((needsSize && !size) || (needsColor && !color)) {
@@ -55,7 +57,7 @@ export function PurchasePanel({ product }: { product: ProductWithRelations }) {
       size: size || null,
       color: color || null,
       customization: null,
-      quantity,
+      quantity: qty,
     })
     openCart()
   }
@@ -67,10 +69,7 @@ export function PurchasePanel({ product }: { product: ProductWithRelations }) {
           {product.brand?.name ?? "Morena Store"} · {PRODUCT_TYPE_LABELS[product.productType]}
         </p>
         <h1 className="text-3xl font-semibold tracking-tight">{product.name}</h1>
-        <div className="flex items-center justify-between gap-3 text-xl">
-          <PriceTag price={product.price} compareAtPrice={product.compareAtPrice} />
-          <StockHint stock={stock} className="text-xs" />
-        </div>
+        <PriceTag price={product.price} compareAtPrice={product.compareAtPrice} className="text-xl" />
         <p className="text-xs text-muted-foreground">Pagás con Mercado Pago · hasta 3 cuotas sin interés</p>
       </div>
 
@@ -124,12 +123,17 @@ export function PurchasePanel({ product }: { product: ProductWithRelations }) {
         </fieldset>
       )}
 
-      <div className="flex gap-2 sm:gap-3">
-        <QuantityStepper value={quantity} onChange={setQuantity} max={Math.max(1, stock)} className="shrink-0" />
-        <Button size="lg" className="h-10 min-w-0 flex-1 px-3" onClick={addToCart} disabled={stock <= 0}>
-          <ShoppingCart className="max-[379px]:hidden" /> {stock > 0 ? "Agregar al carrito" : "Sin stock"}
-        </Button>
-        <FavoriteButton productId={product.id} productName={product.name} size="lg" className="size-10 shrink-0" />
+      <div className="space-y-3">
+        <StockStatus stock={stock} />
+        <div className="flex gap-2 sm:gap-3">
+          {stock > 1 && (
+            <QuantityStepper value={qty} onChange={setQuantity} max={stock} className="shrink-0" />
+          )}
+          <Button size="lg" className="h-10 min-w-0 flex-1 px-3" onClick={addToCart} disabled={stock <= 0}>
+            <ShoppingCart className="max-[379px]:hidden" /> {stock > 0 ? "Agregar al carrito" : "Sin stock"}
+          </Button>
+          <FavoriteButton productId={product.id} productName={product.name} size="lg" className="size-10 shrink-0" />
+        </div>
       </div>
 
       {product.isCustomizable && (
@@ -147,5 +151,36 @@ export function PurchasePanel({ product }: { product: ProductWithRelations }) {
         </Link>
       )}
     </div>
+  )
+}
+
+// Menos de 5 unidades = "quedan pocas". No mostramos la cantidad exacta para no dar pistas del inventario.
+const FEW_LEFT = 4
+
+/** Estado de stock arriba del botón: un punto de color + texto corto, sin competir con el precio. */
+function StockStatus({ stock }: { stock: number }) {
+  const tone = stock <= 0 ? "destructive" : stock <= FEW_LEFT ? "warning" : "success"
+  const label =
+    stock <= 0
+      ? "Sin stock"
+      : stock === 1
+        ? "¡Último en stock!"
+        : stock <= FEW_LEFT
+          ? "¡Quedan pocas unidades!"
+          : "Stock disponible"
+
+  return (
+    <p className="flex items-center gap-2 text-sm" aria-live="polite">
+      <span
+        aria-hidden
+        className={cn(
+          "size-2 shrink-0 rounded-full",
+          tone === "success" && "bg-success",
+          tone === "warning" && "bg-warning",
+          tone === "destructive" && "bg-destructive",
+        )}
+      />
+      <span className={cn("font-medium", tone === "destructive" && "text-destructive")}>{label}</span>
+    </p>
   )
 }

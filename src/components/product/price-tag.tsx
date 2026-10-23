@@ -1,5 +1,4 @@
 import { formatPrice } from "@/lib/format"
-import { LOW_STOCK_THRESHOLD } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 
 export function PriceTag({
@@ -19,10 +18,4 @@ export function PriceTag({
       )}
     </span>
   )
-}
-
-export function StockHint({ stock, className }: { stock: number; className?: string }) {
-  if (stock <= 0) return <span className={cn("text-[11px] font-medium text-destructive", className)}>Sin stock</span>
-  if (stock > LOW_STOCK_THRESHOLD) return null
-  return <span className={cn("text-[11px] whitespace-nowrap text-destructive", className)}>¡Quedan {stock}!</span>
 }

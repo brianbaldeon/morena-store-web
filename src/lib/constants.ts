@@ -60,8 +60,6 @@ export const DEFAULT_FILTERS: Omit<FilterState, "price"> = {
 
 export const PAGE_SIZE = 10
 
-export const LOW_STOCK_THRESHOLD = 15
-
 export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
   PENDIENTE: "Pendiente de pago",
   PAGADO: "Pagado",

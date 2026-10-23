@@ -3,7 +3,7 @@ import Link from "next/link"
 import type { ProductWithRelations } from "@/types"
 import { ProductBadges } from "./product-badge"
 import { FavoriteButton } from "./favorite-button"
-import { PriceTag, StockHint } from "./price-tag"
+import { PriceTag } from "./price-tag"
 
 /** Vista lista del catálogo: misma información que la card, en horizontal. */
 export function ProductRow({ product }: { product: ProductWithRelations }) {
@@ -29,9 +29,8 @@ export function ProductRow({ product }: { product: ProductWithRelations }) {
         {product.sizes.length > 0 && (
           <p className="mt-2 hidden text-xs text-muted-foreground sm:block">Talles: {product.sizes.join(" · ")}</p>
         )}
-        <div className="mt-auto flex items-center justify-between gap-2 pt-3">
+        <div className="mt-auto pt-3">
           <PriceTag price={product.price} compareAtPrice={product.compareAtPrice} />
-          <StockHint stock={product.stock} />
         </div>
       </div>
     </article>
